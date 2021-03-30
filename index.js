@@ -19,14 +19,14 @@ class Plataforma{
     searchMaestro(idm){
         let ma = JSON.parse(localStorage.getItem("maestros"));
         if (ma == null || ma.length == 0) { }else{
-            return ma.filter(m=>m.id==idm);
+            return ma.find(m=>m.id==idm);
         }
     }
 
     saveEstudiante(name, curso){        
         let es = JSON.parse(localStorage.getItem("estudiantes"));
         let id = es.length;
-        let data = {id: id, name: name, curso: curso, asignaturas:{}};
+        let data = {id: id, name: name, curso: curso, asignaturas:[]};
         es.push(data);
         
         localStorage.setItem("estudiantes", JSON.stringify(es));
@@ -49,6 +49,14 @@ class Plataforma{
     getAsignaturas(){
         let asi = JSON.parse(localStorage.getItem("asignaturas"));
         return asi;
+    }
+
+    searchEstudiantes(ide){
+        console.log("ide:"+ide);
+        let est = JSON.parse(localStorage.getItem("estudiantes"));
+        let data = est.find(es=>es.id == ide);
+        console.log("data:"+JSON.stringify(data));
+        return data;
     }
 }
 
@@ -102,7 +110,8 @@ const getM = () => {
         ma = [];
         localStorage.setItem("maestros", JSON.stringify(ma));
         let c = 'colspan = "3"';
-        data =  '<input type ="button" class="btn nuevo" id="mNuevo" value="Nuevo Maestro">'+
+        data =  '<center><h2 style="margin-top:60px;">Maestros</h2></center>'+
+                '<input type ="button" class="btn nuevo" id="mNuevo" value="Nuevo Maestro">'+
                     "<table>"+
                         "<thead>"+
                             "<tr>"+
@@ -133,7 +142,8 @@ const getM = () => {
                     "</tr>";               
         }
 
-        data =  '<input type ="button" class="btn nuevo" id="mNuevo" value="Nuevo Maestro">'+
+        data =  '<center><h2 style="margin-top:60px;">Maestros</h2></center>'+
+                '<input type ="button" class="btn nuevo" id="mNuevo" value="Nuevo Maestro">'+
                     "<table>"+
                         "<thead>"+
                             "<tr>"+
@@ -171,6 +181,85 @@ const setEstudiante = ()=>{
     getEs();    
 }
 
+const getAsigEst = (name,d)=>{
+    console.log(d);
+    console.log(d.length);
+    if (d == null || d.length == 0) { 
+        const data = '<center><h2 style="margin-top:60px;">Asignaturas de '+name+'</h2></center>'+
+                        '<input type ="button" class="btn nuevo" id="eNuevo" value="Agregar Asignaturas">'+
+                        "<table>"+
+                            "<thead>"+
+                                "<tr>"+
+                                    "<th>Id</th>"+
+                                    "<th>Nombre</th>"+
+                                    "<th>Nota 1</th>"+
+                                    "<th>Nota 2</th>"+
+                                    "<th>Nota 3</th>"+
+                                    "<th>Nota Final</th>"+
+                                "</tr>"+
+                            "</thead>"+
+                            "<tbody>"+
+                            '<tr >'+
+                                '<td colspan="6">No hay asignaturas registradas</td>'+
+                            "</tr>"+
+                            "</tbody>"+
+                            "<tfoot>"+
+                                "<tr>"+
+                                "<th>Id</th>"+
+                                "<th>Nombre</th>"+
+                                "<th>Nota 1</th>"+
+                                "<th>Nota 2</th>"+
+                                "<th>Nota 3</th>"+
+                                "<th>Nota Final</th>"+
+                                "</tr>"+
+                            "</tfoot>"+
+                        "</table>";
+        return data;
+    }else{
+        let da = "";
+        for (const dat of d) {
+            da +=   '<tr >'+
+                        '<td>' + d.id + "</td>"+
+                        '<td>' + d.name + "</td>"+
+                        '<td>' + d.nota1 + "</td>"+
+                        '<td>' + d.nota2 + "</td>"+
+                        "<td>" + d.nota3 + "</td>"+
+                        "<td>" + d.notaF + "</td>"+
+                    "</tr>"; 
+        }
+        const data = '<center><h2>Asignaturas de '+name+'</h2></center>'+
+                        '<input type ="button" class="btn nuevo" id="eNuevo" value="Nuevo Estudiante">'+
+                        "<table>"+
+                            "<thead>"+
+                                "<tr>"+
+                                    "<th>Id</th>"+
+                                    "<th>Nombre</th>"+
+                                    "<th>Nota 1</th>"+
+                                    "<th>Nota 2</th>"+
+                                    "<th>Nota 3</th>"+
+                                    "<th>Nota Final</th>"+
+                                "</tr>"+
+                            "</thead>"+
+                            "<tbody>"
+                            '<tr >'+
+                            +da+
+                            "</tr>";
+                            "</tbody>"+
+                            "<tfoot>"+
+                                "<tr>"+
+                                "<th>Id</th>"+
+                                "<th>Nombre</th>"+
+                                "<th>Nota 1</th>"+
+                                "<th>Nota 2</th>"+
+                                "<th>Nota 3</th>"+
+                                "<th>Nota Final</th>"+
+                                "</tr>"+
+                            "</tfoot>"+
+                        "</table>";
+        return data;
+    }
+}
+
 const getEs = () => {  
     //localStorage.clear();  
     let data = "";
@@ -179,7 +268,8 @@ const getEs = () => {
         es = [];
         localStorage.setItem("estudiantes", JSON.stringify(es));
         let c = 'colspan = "4"';
-        data =  '<input type ="button" class="btn nuevo" id="eNuevo" value="Nuevo Estudiante">'+
+        data =  '<center><h2 style="margin-top:60px;">Estudiantes</h2></center>'+
+                    '<input type ="button" class="btn nuevo" id="eNuevo" value="Nuevo Estudiante">'+
                     "<table>"+
                         "<thead>"+
                             "<tr>"+
@@ -205,15 +295,16 @@ const getEs = () => {
         let d="";
         for (const est of es) {
             console.log(est);
-            d = d + "<tr>"+
-                        "<td>" + est.id + "</td>"+
-                        "<td>" + est.name + "</td>"+
+            d = d + '<tr >'+
+                        '<td id="numero">' + est.id + "</td>"+
+                        '<td>' + est.name + "</td>"+
                         "<td>" + est.curso + "</td>"+
-                        '<td><input type ="button" class="btn ver" id="mNuevo" value="Ver"></td>'+
+                        '<td class="boton" style="cursor:pointer;"><span class="ver span">Ver</span></td>'+
                     "</tr>";               
         }
 
-         data =  '<input type ="button" class="btn nuevo" id="eNuevo" value="Nuevo Estudiante">'+
+         data =  '<center><h2 style="margin-top:60px;">Estudiantes</h2></center>'+
+                    '<input type ="button" class="btn nuevo" id="eNuevo" value="Nuevo Estudiante">'+
                     "<table>"+
                         "<thead>"+
                             "<tr>"+
@@ -239,6 +330,15 @@ const getEs = () => {
 
     contenido.html(data);
     const btnNuevoM = $("#eNuevo");
+    $(".boton").click(function() {
+        let valores;
+        $(this).parents("tr").find("#numero").each(function() {
+          valores = parseInt($(this).html());
+        });
+        const d = obj.searchEstudiantes(valores);
+        const data = getAsigEst(d.name, d.asignaturas);
+        contenido.html(data);
+    });
     btnNuevoM.click(setEs);
 }
 
@@ -282,7 +382,8 @@ const getAsignatura = () => {
         asi = [];
         localStorage.setItem("asignaturas", JSON.stringify(asi));
         let c = 'colspan = "3"';
-        data =  '<input type ="button" class="btn nuevo" id="aNuevo" value="Nueva Asignatura">'+
+        data =  '<center><h2 style="margin-top:60px;">Asignaturas</h2></center>'+
+                '<input type ="button" class="btn nuevo" id="aNuevo" value="Nueva Asignatura">'+
                     "<table>"+
                         "<thead>"+
                             "<tr>"+
@@ -312,11 +413,12 @@ const getAsignatura = () => {
             d = d + "<tr>"+
                         "<td>" + asig.id + "</td>"+
                         "<td>" + asig.name + "</td>"+
-                        "<td>" + ma[0].name + "</td>"+
+                        "<td>" + ma.name + "</td>"+
                     "</tr>";               
         }
 
-        data =  '<input type ="button" class="btn nuevo" id="aNuevo" value="Nueva Asignatura">'+
+        data =  '<center><h2 style="margin-top:60px;">Asignaturas</h2></center>'+
+                '<input type ="button" class="btn nuevo" id="aNuevo" value="Nueva Asignatura">'+
                     "<table>"+
                         "<thead>"+
                             "<tr>"+
