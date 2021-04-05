@@ -182,11 +182,6 @@
     color: #C5C5C5;
 }
 
-/*.contenido table tbody tr:nth-child(even) {
-    background: #484848;
-    color: #C5C5C5;
-}*/
-
 .contenido table tr th{
     
     text-align: center;
@@ -199,3 +194,38 @@ table tbody tr:hover{
 }
 
 /*-------------------------------------------------------------*/
+
+@media screen and (max-width: 480px){
+    .head{
+        grid-template-areas: " boton titulo titulo";
+    }
+
+
+    .contenedor .head .menu{
+        display: block;
+        color: white;
+        height: 30%
+    }
+
+    .menu svg{
+        width: 70%;
+        height: 100%;
+        margin-top: 7%;
+    }
+
+    #contenido{
+        width: 100vw;
+        height: 100vh;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .body{
+        grid-template-areas: "menu content content";
+        grid-auto-rows: 1fr;
+        grid-template-columns: 3fr;
+    }
+    .lateral{
+        display: none;
+    }
+}
