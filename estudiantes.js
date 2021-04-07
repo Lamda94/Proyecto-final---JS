@@ -11,7 +11,7 @@ const setEstudiante = ()=>{
 
 const getAsigEst = (name,d,id)=>{
     if (d == null || d.length == 0) { 
-        const data = '<center><h2 style="margin-top:60px;">Asignaturas de '+name+'</h2></center>'+
+        const data  =   '<center><h2 style="margin-top:60px;">Asignaturas de '+name+'</h2></center>'+
                         '<input type ="button" class="btn nuevo" id="aSigNuevo" value="Agregar Asignaturas">'+
                         "<table>"+
                             "<thead>"+
@@ -26,19 +26,19 @@ const getAsigEst = (name,d,id)=>{
                                 "</tr>"+
                             "</thead>"+
                             "<tbody>"+
-                            '<tr >'+
-                                '<td colspan="6">No hay asignaturas registradas</td>'+
-                            "</tr>"+
+                                '<tr >'+
+                                    '<td colspan="7">No hay asignaturas registradas</td>'+
+                                "</tr>"+
                             "</tbody>"+
                             "<tfoot>"+
                                 "<tr>"+
-                                "<th>Id</th>"+
-                                "<th>Nombre</th>"+
-                                "<th>Nota 1</th>"+
-                                "<th>Nota 2</th>"+
-                                "<th>Nota 3</th>"+
-                                "<th>Nota Final</th>"+
-                                "<th>Editar Notas</th>"+
+                                    "<th>Id</th>"+
+                                    "<th>Nombre</th>"+
+                                    "<th>Nota 1</th>"+
+                                    "<th>Nota 2</th>"+
+                                    "<th>Nota 3</th>"+
+                                    "<th>Nota Final</th>"+
+                                    "<th>Editar Notas</th>"+
                                 "</tr>"+
                             "</tfoot>"+
                         "</table>";
@@ -56,6 +56,7 @@ const getAsigEst = (name,d,id)=>{
                             '<td class="boton" style="cursor:pointer;"><span class="ver span">Editar</span></td>'+
                         "</tr>"; 
         }
+
         const data =    '<center><h2 style="margin-top:60px;">Asignaturas de '+name+'</h2></center>'+
                         '<input type ="button" class="btn nuevo" id="aSigNuevo" value="Agregar Asignaturas">'+
                         "<table>"+
@@ -71,19 +72,19 @@ const getAsigEst = (name,d,id)=>{
                                 "</tr>"+
                             "</thead>"+
                             "<tbody>"+
-                            '<tr >'+
-                            da+
-                            "</tr>"+
+                                '<tr >'+
+                                    da+
+                                "</tr>"+
                             "</tbody>"+
                             "<tfoot>"+
                                 "<tr>"+
-                                "<th>Id</th>"+
-                                "<th>Nombre</th>"+
-                                "<th>Nota 1</th>"+
-                                "<th>Nota 2</th>"+
-                                "<th>Nota 3</th>"+
-                                "<th>Nota Final</th>"+                                
-                                "<th>Editar Notas</th>"+
+                                    "<th>Id</th>"+
+                                    "<th>Nombre</th>"+
+                                    "<th>Nota 1</th>"+
+                                    "<th>Nota 2</th>"+
+                                    "<th>Nota 3</th>"+
+                                    "<th>Nota Final</th>"+                                
+                                    "<th>Editar Notas</th>"+
                                 "</tr>"+
                             "</tfoot>"+
                         "</table>";        
