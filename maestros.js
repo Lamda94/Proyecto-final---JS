@@ -39,59 +39,63 @@
             ma = [];
             localStorage.setItem("maestros", JSON.stringify(ma));
             let c = 'colspan = "3"';
-            data =  '<center><h2 style="margin-top:60px;">Maestros</h2></center>'+
-                    '<input type ="button" class="btn nuevo" id="mNuevo" value="Nuevo Maestro">'+
-                        "<table>"+
-                            "<thead>"+
-                                "<tr>"+
-                                    "<th>Id</th>"+
-                                    "<th>Nombre</th>"+
-                                    "<th>Titulo</th>"+
-                                "</tr>"+
-                            "</thead>"+
-                            "<tbody>"+
-                            "<tr><td "+c+">No hay registros de maestros</td>"+
-                            "</tbody>"+
-                            "<tfoot>"+
-                                "<tr>"+
-                                    "<th>Id</th>"+
-                                    "<th>Nombre</th>"+
-                                    "<th>Titulo</th>"+
-                                "</tr>"+
-                            "</tfoot>"+
-                        "</table>";                  
+            data = `<h2 class="mb-4 text-center">Maestros</h2>
+                    <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
+                    <table class="table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Titulo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td class="text-center" colspan="3">No hay registros de maestros</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Titulo</th>
+                        </tr>
+                    </tfoot>
+                    </table>`;                  
         }else{
             let d="";
             for (const maes of ma) {
                 console.log(maes);
-                d = d + "<tr>"+
-                            "<td>" + maes.id + "</td>"+
-                            "<td>" + maes.name + "</td>"+
-                            "<td>" + maes.titulo + "</td>"+
-                        "</tr>";               
+                d = d + `<tr>
+                            <td>${maes.id}</td>+
+                            <td>${maes.name}</td>
+                            <td>${maes.titulo}</td>
+                        </tr>`;               
             }
 
-            data =  '<center><h2 style="margin-top:60px;">Maestros</h2></center>'+
-                    '<input type ="button" class="btn nuevo" id="mNuevo" value="Nuevo Maestro">'+
-                        "<table>"+
-                            "<thead>"+
-                                "<tr>"+
-                                    "<th>Id</th>"+
-                                    "<th>Nombre</th>"+
-                                    "<th>Titulo</th>"+
-                                "</tr>"+
-                            "</thead>"+
-                            "<tbody>"
-                            + d +
-                            "</tbody>"+
-                            "<tfoot>"+
-                                "<tr>"+
-                                    "<th>Id</th>"+
-                                    "<th>Nombre</th>"+
-                                    "<th>Titulo</th>"+
-                                "</tr>"+
-                            "</tfoot>"+
-                        "</table>";
+            data =  `<h2 class="mb-4 text-center">Maestros</h2>
+                    <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
+                    <table class="table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Titulo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        ${ d }
+                        </tr>
+                    </tbody>
+                    <tfoot class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Titulo</th>
+                        </tr>
+                    </tfoot>
+                    </table>`;     
         }
         contenido.html(data);
         const btnNuevoM = $("#mNuevo");
