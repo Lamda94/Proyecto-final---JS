@@ -36,35 +36,32 @@
     }
 
     const getM = () => {  
-        //localStorage.clear(); 
+        localStorage.clear(); 
         let data=""; 
         let ma = obj.getMaestro();
-        if (ma == null || ma.length == 0) {            
-            ma = [];
-            localStorage.setItem("maestros", JSON.stringify(ma));
-            let c = 'colspan = "3"';
+        if (ma.length == 0) {        
             data = `<h2 class="mb-4 text-center">Maestros</h2>
                     <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
                     <table class="table table-striped table-borderless">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Titulo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td class="text-center" colspan="3">No hay registros de maestros</td>
-                        </tr>
-                    </tbody>
-                    <tfoot class="table-dark">
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Titulo</th>
-                        </tr>
-                    </tfoot>
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Titulo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <td class="text-center" colspan="3">No hay registros de maestros</td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Titulo</th>
+                            </tr>
+                        </tfoot>
                     </table>`;                  
         }else{
             let d="";

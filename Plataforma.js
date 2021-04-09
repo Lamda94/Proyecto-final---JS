@@ -6,18 +6,35 @@ class Plataforma{
         let ma = JSON.parse(localStorage.getItem("maestros"));
         let id = ma.length;
         let data = {id: id, name: name, titulo: titulo};
-        ma.push(data);
-        
-        localStorage.setItem("maestros", JSON.stringify(ma));
+        $.post("data/maestros.json", data,
+            function (data, Status) {
+                if (Status="success") {
+                    return {status:200}
+                }else{
+                    return {ststus:500}
+                }
+            },
+            "json"
+        );
     }
 
-    getMaestro(){
-        let ma = JSON.parse(localStorage.getItem("maestros"));
-        return ma;
+    getMaestro(){        
+        $.ajax({
+            url: "data/maestros.json",
+            type: "GET",
+            dataType: "application/json",
+            crossDomain: true,
+        }).done( (data)=>{
+                console.log("data:"+data);
+                return data;
+        }).fail((err)=>{
+            console.log("err:");
+            console.log(err.error());
+        });        
     }
 
     searchMaestro(idm){
-        let ma = JSON.parse(localStorage.getItem("maestros"));
+        let ma = this.getMaestro();
         if (ma == null || ma.length == 0) { }else{
             return ma.find(m=>m.id==idm);
         }
