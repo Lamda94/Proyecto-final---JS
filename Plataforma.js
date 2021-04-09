@@ -21,6 +21,7 @@ class Plataforma{
     getMaestro(){ 
         $.getJSON("data/maestros.json",(data, status)=>{
             if (status === "success") {
+                console.log(data);
                 return data;
             }else{
                 console.log("status:"+status);
