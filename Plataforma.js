@@ -18,19 +18,14 @@ class Plataforma{
         );
     }
 
-    getMaestro(){        
-        $.ajax({
-            url: "data/maestros.json",
-            type: "GET",
-            dataType: "application/json",
-            crossDomain: true,
-        }).done( (data)=>{
-                console.log("data:"+data);
+    getMaestro(){ 
+        $.getJSON("data/maestros.json",(data, status)=>{
+            if (status === "success") {
                 return data;
-        }).fail((err)=>{
-            console.log("err:");
-            console.log(err.error());
-        });        
+            }else{
+                console.log("status:"+status);
+            }
+        });            
     }
 
     searchMaestro(idm){
