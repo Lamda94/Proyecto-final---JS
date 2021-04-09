@@ -37,8 +37,12 @@
 
     const getM = () => {  
         localStorage.clear(); 
-        let data=""; 
-        let ma = obj.getMaestro();
+        let data="";         
+        let ma =  obj.getMaestro();
+        console.log("data:");
+        console.log(ma);
+        //data traida directo del objeto 
+        console.log(obj.getMaestro());
         if (ma.length == 0) {        
             data = `<h2 class="mb-4 text-center">Maestros</h2>
                     <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>

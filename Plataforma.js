@@ -19,14 +19,17 @@ class Plataforma{
     }
 
     getMaestro(){ 
-        $.getJSON("data/maestros.json",(data, status)=>{
+        let data;
+        $.getJSON("data/maestros.json",(dat, status)=>{
             if (status === "success") {
-                console.log(data);
-                return data;
+                console.log(dat);
+                data = dat;    
             }else{
                 console.log("status:"+status);
             }
-        });            
+        });  
+        console.log(data);         
+        return data;        
     }
 
     searchMaestro(idm){
