@@ -35,14 +35,11 @@
         cancelar.click(getM);
     }
 
-    const getM = () => {  
+    const  getM = async () => {          
         localStorage.clear(); 
-        let data="";         
-        let ma =  obj.getMaestro();
-        console.log("data:");
-        console.log(ma);
-        //data traida directo del objeto 
-        console.log(obj.getMaestro());
+        let data="";                  
+        let ma = await obj.getMaestro();
+        console.log(ma);        
         if (ma.length == 0) {        
             data = `<h2 class="mb-4 text-center">Maestros</h2>
                     <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
@@ -106,5 +103,5 @@
         }
         contenido.html(data);
         const btnNuevoM = $("#mNuevo");
-        btnNuevoM.click(saveM);
+        btnNuevoM.click(saveM);      
     }

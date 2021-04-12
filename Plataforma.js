@@ -19,17 +19,14 @@ class Plataforma{
     }
 
     getMaestro(){ 
-        let data;
-        $.getJSON("data/maestros.json",(dat, status)=>{
-            if (status === "success") {
-                console.log(dat);
-                data = dat;    
-            }else{
-                console.log("status:"+status);
+        const d = [{id:1, name:"Luis Mendez", titulo: "I. Sistemas"}];
+        $.getJSON("data/maestros.json", data => {
+            for (const dat of data) {
+                d.push(dat);
+                console.log(d);                               
             }
-        });  
-        console.log(data);         
-        return data;        
+            return d; 
+        });               
     }
 
     searchMaestro(idm){
