@@ -18,17 +18,10 @@ class Plataforma{
         );
     }
 
-    getMaestro(){ 
+    async getMaestro(){ 
         let data;
-        $.getJSON("data/maestros.json",(dat, status)=>{
-            if (status === "success") {
-                console.log(dat);
-                data = dat;    
-            }else{
-                console.log("status:"+status);
-            }
-        });  
-        console.log(data);         
+        data = await $.getJSON("data/maestros.json");  
+        console.log(data);
         return data;        
     }
 
