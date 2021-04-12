@@ -1,17 +1,11 @@
 class maestro{
-    constructor(){
-        this.maestro = [];
-        db.collection("maestros").orderBy("id", "asc").get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                this.maestro.push(doc.data());
-            });
-        });
+    constructor (){
+        await this.onGetMaestros();
     }
 
-    reloadMaestros(){
-        db.collection("maestros").orderBy("id", "asc").get()
-        .then((querySnapshot) => {
+    async onGetMaestros(){
+        this.maestro = [];
+        await db.collection("maestros").onSnapshot((querySnapshot) => {
             this.maestro = [];
             querySnapshot.forEach((doc) => {   
                 this.maestro.push(doc.data());                
@@ -30,13 +24,13 @@ class maestro{
         let data = {id, name, title};
         db.collection("maestros").add(data)
         .then((docRef) => {
-            this.reloadMaestros();
             console.log("documento guardado con ID: ", docRef.id);
         })
         .catch((error) => {
             console.error("Error agregando el documento: ", error);
         });     
     }
+
     searchMaestro(id){
         return this.maestro.find(m=>m.id==id);
     }
