@@ -1,15 +1,61 @@
-    //Funciones para controlar el registro y listado de maestros
+class maestro{
+    constructor(){
+        this.maestro = [];
+        db.collection("maestros").orderBy("id", "asc").get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                this.maestro.push(doc.data());
+            });
+        });
+    }
+
+    reloadMaestros(){
+        db.collection("maestros").orderBy("id", "asc").get()
+        .then((querySnapshot) => {
+            this.maestro = [];
+            querySnapshot.forEach((doc) => {   
+                this.maestro.push(doc.data());                
+            });
+            console.log(this.maestro);
+            console.log("Actualizado");
+        });
+    }
+
+    getMaestros(){     
+        return  this.maestro;
+    }
+
+    saveMaestro(name, title){
+        const id = this.maestro.length;
+        let data = {id, name, title};
+        db.collection("maestros").add(data)
+        .then((docRef) => {
+            this.reloadMaestros();
+            console.log("documento guardado con ID: ", docRef.id);
+        })
+        .catch((error) => {
+            console.error("Error agregando el documento: ", error);
+        });     
+    }
+    searchMaestro(id){
+        return this.maestro.find(m=>m.id==id);
+    }
+}
+
+const objMaestros = new maestro();
+
+$(document).ready(()=>{
     const setMaestro = ()=>{
         let name = $("#inputName").val();
         console.log(name);
         
         let titulo = $("#inputTitulo").val();
         console.log(titulo);
-        obj.saveMaestro(name, titulo);    
-        getM();    
+        objMaestros.saveMaestro(name, titulo);    
+        getMaestros();    
     }
 
-    const saveM = () =>{
+    const newMaestro = () =>{
         let data = `<div id="formulario" class="d-flex justify-content-center ">
                     <form id="fMNuevo" class="col-7">
                         <h2 class="text-center">Nuevo Maestro</h2>
@@ -27,20 +73,17 @@
                         </div>
                     </form>
                 </div>`;
-
         contenido.html(data);
         const registrar = $("#mRegistrar");
         registrar.click(setMaestro);
         const cancelar = $("#mCancelar");
-        cancelar.click(getM);
+        cancelar.click(getMaestros);
     }
 
-    const  getM = async () => {          
-        localStorage.clear(); 
-        let data="";                  
-        let ma = await obj.getMaestro();
-        console.log(ma);        
-        if (ma.length == 0) {        
+    const getMaestros = ()=>{
+        let data = "";
+        const getMaestros = objMaestros.getMaestros();
+        if (getMaestros.lenght == 0) {
             data = `<h2 class="mb-4 text-center">Maestros</h2>
                     <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
                     <table class="table table-striped table-borderless">
@@ -63,20 +106,16 @@
                                 <th>Titulo</th>
                             </tr>
                         </tfoot>
-                    </table>`;                  
+                    </table>`;       
         }else{
-            let d="";
-            for (const maes of ma) {
-                console.log(maes);
-                d = d+`<tr>
-                            <td>${maes.id}</td>
-                            <td>${maes.name}</td>
-                            <td>${maes.titulo}</td>
-                        </tr>`;               
+            let d = "";
+            for (const maestro of getMaestros) {
+                d += `<tr>
+                        <td>${maestro.id}</td>
+                        <td>${maestro.name}</td>
+                        <td>${maestro.title}</td>
+                    </tr>`;
             }
-            console.log(d);
-            
-
             data =  `<h2 class="mb-4 text-center">Maestros</h2>
                     <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
                     <table class="table table-striped">
@@ -99,9 +138,14 @@
                             <th>Titulo</th>
                         </tr>
                     </tfoot>
-                    </table>`;     
+                    </table>`; 
         }
         contenido.html(data);
         const btnNuevoM = $("#mNuevo");
-        btnNuevoM.click(saveM);      
+        btnNuevoM.click(newMaestro);
     }
+
+    const btnMaestros = $("#maestros");
+    btnMaestros.click(getMaestros);
+});
+
