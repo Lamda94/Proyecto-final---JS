@@ -1,5 +1,5 @@
-
 $(document).ready(()=>{
+    
     const deleteAsignatura = (idf)=>{
         objAsignaturas.deleteAsignatura(idf); 
         getAsignatura();
