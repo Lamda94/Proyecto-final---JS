@@ -1,86 +1,29 @@
-class asignaturas{
-    constructor(){
-        this.asignaturas = [];
-        db.collection("asignaturas").orderBy("id", "asc").get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                this.asignaturas.push(doc.data());
-            });
-        });
-        this.asignaturas.sort((p,n)=>{ return (p.id - n.id); });
-    }
-
-    reloadAsignaturas(){
-        db.collection("asignaturas").orderBy("id", "asc").get()
-        .then((querySnapshot) => {
-            this.asignaturas = [];
-            querySnapshot.forEach((doc) => {   
-                this.asignaturas.push(doc.data());                
-            });
-            this.asignaturas.sort((p,n)=>{ return (p.id - n.id); });
-            console.log(this.asignaturas);
-            console.log("Actualizado");
-        });
-    }
-
-    getAsignaturas(){     
-        return  this.asignaturas;
-    }
-
-    saveAsignaturas(name, maestro){
-        let id = this.asignaturas.length;
-        console.log(`lenght: ${id}`);        
-        if (id == 0) {
-           id = 1; 
-           console.log(`id: ${id}`);
-        } else {
-            id = this.asignaturas[id-1].id;
-            console.log(`ultimo id: ${id}`);
-            id++;
-            console.log(`id: ${id}`);
-        }
-        console.log(id);        
-        let data = {id, maestro, name};
-        console.log(data);
-        
-        db.collection("asignaturas").add(data)
-        .then((docRef) => {
-            this.reloadAsignaturas();
-            console.log("documento guardado con ID: ", docRef.id);
-        })
-        .catch((error) => {
-            console.error("Error agregando el documento: ", error);
-        });     
-    }
-
-    searchAsignaturas(ide){
-        let data = this.asignaturas.find(as=>as.id == ide);
-        return data;
-    }
-}
-
-const objAsignaturas = new asignaturas();
 
 $(document).ready(()=>{
+    const deleteAsignatura = (idf)=>{
+        objAsignaturas.deleteAsignatura(idf); 
+        getAsignatura();
+    }
+    
     const getAsignatura = () => {   
         let data="";
         let listAsiganturas = objAsignaturas.getAsignaturas();
         if (listAsiganturas.length == 0) {            
 
             data = `<center><h2 style="margin-top:60px;">Asignaturas</h2></center>
-                    <input type ="button" class="btn nuevo" id="aNuevo" value="Nueva Asignatura">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Nombre</th>
-                                    <th>Maestro</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <tr><td colspan="3">No hay registros de estudiantes</td>
+                    <button type="button" class="btn btn-primary mb-4" id="aNuevo">Nueva Asignatura</button>
+                    <table class="table table-striped table-borderless">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Maestro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="text-center" colspan="3">No hay registros de estudiantes</td>
                             </tbody>
-                            <tfoot>
+                            <tfoot class="table-dark">
                                 <tr>
                                     <th>Id</th>
                                     <th>Nombre</th>
@@ -98,6 +41,7 @@ $(document).ready(()=>{
                             <td>${asig.id}</td>
                             <td>${asig.name}</td>
                             <td>${ma.name}</td>
+                            <td><input type ="button" class="btnDelete btn btn-danger" data-idf="${asig.idf}" id="asDelete" value="Eliminar"></td>
                         </tr>`;               
             }
 
@@ -109,6 +53,7 @@ $(document).ready(()=>{
                                 <th>Id</th>
                                 <th>Nombre</th>
                                 <th>Maestro</th>
+                                <th>Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,13 +66,23 @@ $(document).ready(()=>{
                                 <th>Id</th>
                                 <th>Nombre</th>
                                 <th>curso</th>
+                                <th>Eliminar</th>
                             </tr>
                         </tfoot>
                     </table>`;   
         }
-        contenido.html(data);
-        const btnNuevoM = $("#aNuevo");
-        btnNuevoM.click(newAsignatura);
+        contenido.fadeOut("slow",()=>{
+            contenido.html(data);
+        });        
+        contenido.fadeIn("slow",()=>{
+            const btnNuevoM = $("#aNuevo");
+            const btnDelete = $(".btnDelete");
+            btnDelete.click((e)=>{
+                let idf = e.target.dataset.idf;
+                deleteAsignatura(idf);
+            });
+            btnNuevoM.click(newAsignatura);
+        });
     }
 
     const setAsignaturas = ()=>{
@@ -166,9 +121,13 @@ $(document).ready(()=>{
                             </div>
                         </form>
                     </div>`;
-            contenido.html(data);
-            $("#asAgregar").click(setAsignaturas);
-            $("#asCancelar").click(getAsignatura);    
+            contenido.fadeOut("slow",()=>{
+                contenido.html(data);
+            });        
+            contenido.fadeIn("slow",()=>{
+                $("#asAgregar").click(setAsignaturas);
+                $("#asCancelar").click(getAsignatura);  
+            });  
         }else{
             alert("es necesario el registro de al menos un maestro.");
             getMaestros();

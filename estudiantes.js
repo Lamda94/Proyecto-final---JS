@@ -1,93 +1,7 @@
-class estudiantes{
-    constructor(){
-        this.onGetEstudiantes();
-    }
-
-    onGetEstudiantes(){
-        db.collection("estudiantes").onSnapshot((querySnapshot) => {
-            console.log(`cargando:${this.actualizado}`);
-            this.estudiantes = [];
-            querySnapshot.forEach((doc) => {  
-                let data = doc.data(); 
-                data.idf = doc.id;
-                this.estudiantes.push(data);            
-            });
-            console.log(this.estudiantes);
-            console.log("Actualizado");
-        });
-    }
-
-    getEstudiantes(){     
-        return  this.estudiantes;
-    }
-
-    saveEstudiantes(name, curso){
-        const id = this.estudiantes.length;
-        let data = {id, name, curso, asignaturas:[]};
-        db.collection("estudiantes").add(data)
-        .then((docRef) => {
-            console.log("documento guardado con ID: ", docRef.id);
-        })
-        .catch((error) => {
-            console.error("Error agregando el documento: ", error);
-        });     
-    }
-
-    deleteEstudiantes(id){
-        db.collection("estudiantes").doc(id).delete().then((e)=>{
-            return "Documento eliminado correctamente";
-        })
-        .catch((e)=>{
-            console.log(e);
-        });
-    }
-
-    async saveAsignatura(id, cursos){
-        console.log(`id es:${id}`);
-        const asig = {name: cursos, nota1: 0, nota2: 0, nota3: 0, notaf: 0 };
-        const data = this.estudiantes.find((es)=>{
-            if (es.idf == id) {
-                return {id:es.id, curso: es.curso, name:es.name, asignaturas: es.asignaturas };
-            }else{
-                console.log(`${es.idf} == ${id}`);
-            }
-        });
-        data.asignaturas.push(asig);
-        console.log(data);
-        let res = await db.collection("estudiantes").doc(id).update(data);
-        console.log(res);
-    }
-
-    removeAsignaturas(idf){
-        let data = this.estudiantes.find((es)=>{
-            if (es.idf == idf) {
-                return {id:es.id, curso: es.curso, name:es.name, asignaturas: es.asignaturas };
-            }else{
-                console.log(`${es.idf} == ${id}`);
-            }
-        });
-        let name = data.name;
-
-        data.asignaturas = data.asignaturas.map(a=>a.name !== name);
-        console.log("removed:");
-        console.log(data);
-    }
-
-    searchEstudiantes(ide){
-        let data = this.estudiantes.find(es=>es.id == ide);
-        return data;
-    }
-}
-
-const objEstudiantes = new estudiantes();
-
 $(document).ready(()=>{
     const setEstudiantes = ()=>{
         let name = $("#inputName").val();
-        console.log(name);
-        
         let curso = $("#inputCurso").val();
-        console.log(curso);
         objEstudiantes.saveEstudiantes(name, curso);    
         getEstudiantes();    
     }
@@ -110,9 +24,14 @@ $(document).ready(()=>{
                             </div>
                         </form>
                     </div>`;
-        contenido.html(data);
-        $("#eRegistrar").click(setEstudiantes);
-        $("#eCancelar").click(getEstudiantes);
+        contenido.fadeOut("slow",()=>{
+            contenido.html(data);
+        });        
+        contenido.fadeIn("slow",()=>{
+            $("#eRegistrar").click(setEstudiantes);
+            $("#eCancelar").click(getEstudiantes);
+        });
+        
     }
 
     const setAsigEstu = (idf)=>{
@@ -123,8 +42,9 @@ $(document).ready(()=>{
         getEstudiantes(); 
     }
 
-    const removeAsignatura = (idf)=>{
-         objEstudiantes.removeAsignaturas(idf);
+    const removeAsignatura = (idf,name)=>{
+         objEstudiantes.removeAsignaturas(idf,name);
+         getEstudiantes();         
     }
 
     const addAsignatura = (id, idf)=>{
@@ -149,15 +69,19 @@ $(document).ready(()=>{
                             </div>
                         </form>
                     </div>`;
-            contenido.html(data);
-            $("#asAgregar").click((e)=>{
-                let idf = e.target.dataset.idf;
-                setAsigEstu(idf);            
-            });
-            $("#asCancelar").click(getEstudiantes);
+            contenido.fadeOut("slow",()=>{
+                contenido.html(data);
+            });        
+            contenido.fadeIn("slow",()=>{
+                 $("#asAgregar").click((e)=>{
+                    let idf = e.target.dataset.idf;
+                    setAsigEstu(idf);            
+                });
+                $("#asCancelar").click(getEstudiantes);
+            });           
         }else{
             alert("Es necesario el registro de almenos una asignatura");
-            getAsignatura();
+            getAsignaturas();
         }    
     }
 
@@ -205,7 +129,7 @@ $(document).ready(()=>{
                                 <td class="text-center">${dat.nota3}</td>
                                 <td class="text-center">${dat.notaf}</td>
                                 <td><button type="button" class="boton btn btn-success" data-idf="${idf}">Editar</button></td>
-                                <td><button type="button" class="btndelete btn btn-danger" data-idf="${idf}">Eliminar</button></td>
+                                <td><button type="button" class="btndelete btn btn-danger" data-idf="${idf}" data-name="${dat.name}">Eliminar</button></td>
                             </tr>`; 
             }
 
@@ -247,14 +171,12 @@ $(document).ready(()=>{
     const deleteEstudiante = async (e)=>{
         let idf = e.target.dataset.idf;
         const msj = await objEstudiantes.deleteEstudiantes(idf);
-        alert(msj);
         getEstudiantes();       
     }
 
-    const getEstudiantes = ()=>{
+    const getEstudiantes = async ()=>{
         let data = "";
         const getEstudiantes = objEstudiantes.getEstudiantes();
-
         if (getEstudiantes.length == 0) { 
             data = `<h2 class="mb-4 text-center">Estudiantes</h2>
                     <button type="button" class="btn btn-primary mb-4" id="eNuevo">Nuevo Maestro</button>
@@ -284,7 +206,6 @@ $(document).ready(()=>{
         }else{
             let d="";
             for (const est of getEstudiantes) {
-                console.log(est);
                 d = d + `<tr >
                             <td id="numero">${est.id}</td>
                             <td>${est.name}</td>
@@ -322,29 +243,37 @@ $(document).ready(()=>{
                         </tfoot>
                     </table>`;        
         }
-        contenido.html(data);
-        const btnNuevoM = $("#eNuevo");
-        $(".btnElimnar").click(deleteEstudiante);
-        $(".boton").click((e)=>{
-            console.log(e.target.dataset.idf);
-            let valores = e.target.dataset.id;
-            let idf = e.target.dataset.idf;
-            const d = objEstudiantes.searchEstudiantes(valores);
-            const data = getAsignaturas(d.name, d.asignaturas, d.id, idf);
+        contenido.fadeOut("slow",()=>{
             contenido.html(data);
-            const btnAgAsi = $("#aSigNuevo");
-            btnAgAsi.click((e)=>{
+        });        
+        contenido.fadeIn("slow",()=>{
+            const btnNuevoM = $("#eNuevo");
+            $(".btnElimnar").click(deleteEstudiante);
+            $(".boton").click((e)=>{
+                let valores = e.target.dataset.id;
                 let idf = e.target.dataset.idf;
-                console.log(`idf: ${idf}`);
-                addAsignatura(d.id, idf)            
+                const d = objEstudiantes.searchEstudiantes(valores);
+                const data = getAsignaturas(d.name, d.asignaturas, d.id, idf);
+                contenido.fadeOut("slow",()=>{
+                    contenido.html(data);
+                });        
+                contenido.fadeIn("slow",()=>{
+                    const btnAgAsi = $("#aSigNuevo");
+                    btnAgAsi.click((e)=>{
+                        let idf = e.target.dataset.idf;
+                        addAsignatura(d.id, idf)            
+                    });
+                    const btndelete = $(".btndelete");
+                    btndelete.click((e)=>{
+                        const idf = e.target.dataset.idf;
+                        const name = e.target.dataset.name;
+                        removeAsignatura(idf, name);
+                    });
+                });
+                
             });
-            const btndelete = $(".btndelete");
-            btndelete.click((e)=>{
-                const idf = e.target.dataset.idf;
-                removeAsignatura(idf);
-            });
-        });
-        btnNuevoM.click(newEstudiantes);
+            btnNuevoM.click(newEstudiantes);
+        });        
     }
 
     const btnEstudiantes = $("#estudiantes");
