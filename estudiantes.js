@@ -1,22 +1,18 @@
 class estudiantes{
     constructor(){
-        this.estudiantes = [];
-        db.collection("estudiantes").orderBy("id", "asc").get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                this.estudiantes.push(doc.data());
-            });
-        });
+        this.onGetEstudiantes();
     }
 
-    reloadEstudiantes(){
-        db.collection("estudiantes").orderBy("id", "asc").get()
-        .then((querySnapshot) => {
-            this.maestro = [];
-            querySnapshot.forEach((doc) => {   
-                this.maestro.push(doc.data());                
+    onGetEstudiantes(){
+        db.collection("estudiantes").onSnapshot((querySnapshot) => {
+            console.log(`cargando:${this.actualizado}`);
+            this.estudiantes = [];
+            querySnapshot.forEach((doc) => {  
+                let data = doc.data(); 
+                data.idf = doc.id;
+                this.estudiantes.push(data);            
             });
-            console.log(this.maestro);
+            console.log(this.estudiantes);
             console.log("Actualizado");
         });
     }
@@ -30,7 +26,6 @@ class estudiantes{
         let data = {id, name, curso, asignaturas:[]};
         db.collection("estudiantes").add(data)
         .then((docRef) => {
-            this.reloadEstudiantes();
             console.log("documento guardado con ID: ", docRef.id);
         })
         .catch((error) => {
@@ -38,9 +33,31 @@ class estudiantes{
         });     
     }
 
-    saveAsignatura(id,cursos){
-
+    deleteEstudiantes(id){
+        db.collection("estudiantes").doc(id).delete().then((e)=>{
+            return "Documento eliminado correctamente";
+        })
+        .catch((e)=>{
+            console.log(e);
+        });
     }
+
+    async saveAsignatura(id, cursos){
+        console.log(`id es:${id}`);
+        const asig = {name: cursos, nota1: 0, nota2: 0, nota3: 0, notaf: 0 };
+        const data = this.estudiantes.find((es)=>{
+            if (es.idf == id) {
+                return {id:es.id, curso: es.curso, name:es.name, asignaturas: es.asignaturas };
+            }else{
+                console.log(`${es.idf} == ${id}`);
+            }
+        });
+        data.asignaturas.push(asig);
+        console.log(data);
+        let res = await db.collection("estudiantes").doc(id).update(data);
+        console.log(res);
+    }
+
     searchEstudiantes(ide){
         let data = this.estudiantes.find(es=>es.id == ide);
         return data;
@@ -83,21 +100,21 @@ $(document).ready(()=>{
         $("#eCancelar").click(getEstudiantes);
     }
 
-    const setAsigEstu = (id)=>{
+    const setAsigEstu = (idf)=>{
         let asig = $("#inputAsig").val();
         console.log(asig);
 
-        objEstudiantes.saveAsignatura(id, asig);    
-        getEs(); 
+        objEstudiantes.saveAsignatura(idf, asig);    
+        getEstudiantes(); 
     }
 
-    const addAsignatura = (id)=>{
+    const addAsignatura = (id, idf)=>{
         let data = "";
         let asi = objAsignaturas.getAsignaturas();
         if (asi.length > 0) {
             let lista = '<select class="form-control" name="inputAsig" id="inputAsig">';
             for (const asig of asi) {
-                lista += `<option value="${asig.id}">${asig.name}</option>`;
+                lista += `<option value="${asig.name}">${asig.name}</option>`;
             }
             lista += '</select>';
             data = `<div id="formulario" class="d-flex justify-content-center ">
@@ -105,16 +122,19 @@ $(document).ready(()=>{
                             <h2 class="text-center">Agregar Asignatura</h2>
                             <div class="mb-3">
                                 <label for="inputName" class="form-label">Asignatura</label>
-                                ${lista}
+                                ${ lista }
                             </div>
                             <div class="mb-3">
-                                <input type ="button" class="btn btn-primary" id="asAgregar" value="Agregar">
+                                <input type ="button" class="btn btn-primary" id="asAgregar" data-idf = "${ idf }" value="Agregar">
                                 <input type ="button" class="btn btn-danger" id="asCancelar" value="Cancelar">
                             </div>
                         </form>
                     </div>`;
             contenido.html(data);
-            $("#asAgregar").click(()=>setAsigEstu(id));
+            $("#asAgregar").click((e)=>{
+                let idf = e.target.dataset.idf;
+                setAsigEstu(idf);            
+            });
             $("#asCancelar").click(getEstudiantes);
         }else{
             alert("Es necesario el registro de almenos una asignatura");
@@ -122,36 +142,34 @@ $(document).ready(()=>{
         }    
     }
 
-    const getAsignaturas = (name,d,id)=>{
-        if (d == null || d.length == 0) { 
+    const getAsignaturas = (name,d,id, idf)=>{
+        if (d.length == 0) { 
             let data = `<h2 class="mb-4 text-center">Asignaturas de ${name}</h2>
-                        <button type="button" class="btn btn-primary mb-4" id="aSigNuevo">Agregar</button>
+                        <button type="button" class="btn btn-primary mb-4"  data-idf="${idf}" id="aSigNuevo">Agregar</button>
                         <table class="table table-striped table-borderless">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Nombre</th>
-                                    <th>Nota 1</th>
-                                    <th>Nota 2</th>
-                                    <th>Nota 3</th>
-                                    <th>Nota Final</th>
-                                    <th>Editar Notas</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Nota 1</th>
+                                    <th class="text-center">Nota 2</th>
+                                    <th class="text-center">Nota 3</th>
+                                    <th class="text-center">Nota Final</th>
+                                    <th class="text-center">Editar Notas</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="text-center" colspan="7">No hay asignaturas registradas</td>
+                                    <td class="text-center" colspan="6">No hay asignaturas registradas</td>
                                 </tr>
                             </tbody>
                             <tfoot class="table-dark">
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Nombre</th>
-                                    <th>Nota 1</th>
-                                    <th>Nota 2</th>
-                                    <th>Nota 3</th>
-                                    <th>Nota Final</th>
-                                    <th>Editar Notas</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Nota 1</th>
+                                    <th class="text-center">Nota 2</th>
+                                    <th class="text-center">Nota 3</th>
+                                    <th class="text-center">Nota Final</th>
+                                    <th class="text-center">Editar Notas</th>
                                 </tr>
                             </tfoot>
                         </table>`;                
@@ -160,28 +178,26 @@ $(document).ready(()=>{
             let da = "";
             for (const dat of d) {
                 da = da + `<tr>
-                                <td>${dat.id}</td>
-                                <td>${dat.name}</td>
-                                <td>${dat.nota1}</td>
-                                <td>${dat.nota2}</td>
-                                <td>${dat.nota3}</td>
-                                <td>${dat.notaf}</td>
-                                <td><button type="button" class="boton btn btn-success">Editar</button></td>
+                                <td class="text-center">${dat.name}</td>
+                                <td class="text-center">${dat.nota1}</td>
+                                <td class="text-center">${dat.nota2}</td>
+                                <td class="text-center">${dat.nota3}</td>
+                                <td class="text-center">${dat.notaf}</td>
+                                <td><button type="button" class="boton btn btn-success" data-idf="${idf}">Editar</button></td>
                             </tr>`; 
             }
 
             const data =    `<h2 class="mb-4 text-center">Asignaturas de ${name}</h2>
-                            <button type="button" class="btn btn-primary mb-4" id="aSigNuevo">Agregar</button>
+                            <button type="button" class="btn btn-primary mb-4" data-idf="${idf}" id="aSigNuevo">Agregar</button>
                             <table class="table table-striped table-borderless">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>Id</th>
-                                        <th>Nombre</th>
-                                        <th>Nota 1</th>
-                                        <th>Nota 2</th>
-                                        <th>Nota 3</th>
-                                        <th>Nota Final</th>
-                                        <th>Editar Notas</th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">Nota 1</th>
+                                        <th class="text-center">Nota 2</th>
+                                        <th class="text-center">Nota 3</th>
+                                        <th class="text-center">Nota Final</th>
+                                        <th class="text-center">Editar Notas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -191,13 +207,12 @@ $(document).ready(()=>{
                                 </tbody>
                                 <tfoot class="table-dark">
                                     <tr>
-                                        <th>Id</th>
-                                        <th>Nombre</th>
-                                        <th>Nota 1</th>
-                                        <th>Nota 2</th>
-                                        <th>Nota 3</th>
-                                        <th>Nota Final</th>
-                                        <th>Editar Notas</th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">Nota 1</th>
+                                        <th class="text-center">Nota 2</th>
+                                        <th class="text-center">Nota 3</th>
+                                        <th class="text-center">Nota Final</th>
+                                        <th class="text-center">Editar Notas</th>
                                     </tr>
                                 </tfoot>
                             </table>`;        
@@ -205,10 +220,17 @@ $(document).ready(()=>{
         }
     }
 
+    const deleteEstudiante = async (e)=>{
+        let idf = e.target.dataset.idf;
+        const msj = await objEstudiantes.deleteEstudiantes(idf);
+        alert(msj);
+        getEstudiantes();       
+    }
+
     const getEstudiantes = ()=>{
         let data = "";
         const getEstudiantes = objEstudiantes.getEstudiantes();
-        console.log(getEstudiantes);
+
         if (getEstudiantes.length == 0) { 
             data = `<h2 class="mb-4 text-center">Estudiantes</h2>
                     <button type="button" class="btn btn-primary mb-4" id="eNuevo">Nuevo Maestro</button>
@@ -243,7 +265,8 @@ $(document).ready(()=>{
                             <td id="numero">${est.id}</td>
                             <td>${est.name}</td>
                             <td>${est.curso}</td>
-                            <td><button type="button" class="boton btn btn-success">Ver</button></td>
+                            <td><button type="button" class="boton btn btn-success" data-id="${est.id}" data-idf="${est.idf}">Ver</button></td>
+                            <td><button type="button" class="btnElimnar btn btn-danger " data-idf="${est.idf}">Eliminar</button></td>
                         </tr>`;            
             }
 
@@ -256,6 +279,7 @@ $(document).ready(()=>{
                                 <th>Nombre</th>
                                 <th>curso</th>
                                 <th>Asignaturas</th>
+                                <th>Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -269,22 +293,27 @@ $(document).ready(()=>{
                                 <th>Nombre</th>
                                 <th>curso</th>
                                 <th>Asignaturas</th>
+                                <th>Eliminar</th>
                             </tr>
                         </tfoot>
                     </table>`;        
         }
         contenido.html(data);
         const btnNuevoM = $("#eNuevo");
-        $(".boton").click(function() {
-            let valores;
-            $(this).parents("tr").find("#numero").each(function() {
-            valores = parseInt($(this).html());
-            });
+        $(".btnElimnar").click(deleteEstudiante);
+        $(".boton").click((e)=>{
+            console.log(e.target.dataset.idf);
+            let valores = e.target.dataset.id;
+            let idf = e.target.dataset.idf;
             const d = objEstudiantes.searchEstudiantes(valores);
-            const data = getAsignaturas(d.name, d.asignaturas, d.id);
+            const data = getAsignaturas(d.name, d.asignaturas, d.id, idf);
             contenido.html(data);
             const btnAgAsi = $("#aSigNuevo");
-            btnAgAsi.click(()=>addAsignatura(d.id));
+            btnAgAsi.click((e)=>{
+                let idf = e.target.dataset.idf;
+                console.log(`idf: ${idf}`);
+                addAsignatura(d.id, idf)            
+            });
         });
         btnNuevoM.click(newEstudiantes);
     }
