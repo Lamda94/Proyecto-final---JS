@@ -58,6 +58,21 @@ class estudiantes{
         console.log(res);
     }
 
+    removeAsignaturas(idf){
+        let data = this.estudiantes.find((es)=>{
+            if (es.idf == idf) {
+                return {id:es.id, curso: es.curso, name:es.name, asignaturas: es.asignaturas };
+            }else{
+                console.log(`${es.idf} == ${id}`);
+            }
+        });
+        let name = data.name;
+
+        data.asignaturas = data.asignaturas.map(a=>a.name !== name);
+        console.log("removed:");
+        console.log(data);
+    }
+
     searchEstudiantes(ide){
         let data = this.estudiantes.find(es=>es.id == ide);
         return data;
@@ -108,6 +123,10 @@ $(document).ready(()=>{
         getEstudiantes(); 
     }
 
+    const removeAsignatura = (idf)=>{
+         objEstudiantes.removeAsignaturas(idf);
+    }
+
     const addAsignatura = (id, idf)=>{
         let data = "";
         let asi = objAsignaturas.getAsignaturas();
@@ -155,11 +174,12 @@ $(document).ready(()=>{
                                     <th class="text-center">Nota 3</th>
                                     <th class="text-center">Nota Final</th>
                                     <th class="text-center">Editar Notas</th>
+                                    <th class="text-center">Eliminar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="text-center" colspan="6">No hay asignaturas registradas</td>
+                                    <td class="text-center" colspan="7">No hay asignaturas registradas</td>
                                 </tr>
                             </tbody>
                             <tfoot class="table-dark">
@@ -170,6 +190,7 @@ $(document).ready(()=>{
                                     <th class="text-center">Nota 3</th>
                                     <th class="text-center">Nota Final</th>
                                     <th class="text-center">Editar Notas</th>
+                                    <th class="text-center">Eliminar</th>
                                 </tr>
                             </tfoot>
                         </table>`;                
@@ -184,6 +205,7 @@ $(document).ready(()=>{
                                 <td class="text-center">${dat.nota3}</td>
                                 <td class="text-center">${dat.notaf}</td>
                                 <td><button type="button" class="boton btn btn-success" data-idf="${idf}">Editar</button></td>
+                                <td><button type="button" class="btndelete btn btn-danger" data-idf="${idf}">Eliminar</button></td>
                             </tr>`; 
             }
 
@@ -198,6 +220,7 @@ $(document).ready(()=>{
                                         <th class="text-center">Nota 3</th>
                                         <th class="text-center">Nota Final</th>
                                         <th class="text-center">Editar Notas</th>
+                                        <th class="text-center">Eliminar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -213,6 +236,7 @@ $(document).ready(()=>{
                                         <th class="text-center">Nota 3</th>
                                         <th class="text-center">Nota Final</th>
                                         <th class="text-center">Editar Notas</th>
+                                        <th class="text-center">Eliminar</th>
                                     </tr>
                                 </tfoot>
                             </table>`;        
@@ -313,6 +337,11 @@ $(document).ready(()=>{
                 let idf = e.target.dataset.idf;
                 console.log(`idf: ${idf}`);
                 addAsignatura(d.id, idf)            
+            });
+            const btndelete = $(".btndelete");
+            btndelete.click((e)=>{
+                const idf = e.target.dataset.idf;
+                removeAsignatura(idf);
             });
         });
         btnNuevoM.click(newEstudiantes);
