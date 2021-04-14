@@ -1,22 +1,18 @@
 class maestro{
     constructor (){
-        this.onGetMaestros();
     }
 
-    onGetMaestros(){
-        db.collection("maestros").onSnapshot((querySnapshot) => {
-            this.maestro = [];
-            querySnapshot.forEach((doc) => {   
-                let data = doc.data(); 
-                data.idf = doc.id;
-                this.maestro.push(data);               
-            });
-            this.maestro.sort((p,n)=>{ return (p.id - n.id)});
+    async getMaestros(){ 
+        this.maestro = [];    
+        const querySnapshot = await db.collection("maestros").get()
+        querySnapshot.forEach((doc) => {   
+            let data = doc.data(); 
+            data.idf = doc.id;
+            this.maestro.push(data);               
         });
-    }
-
-    getMaestros(){     
-        return  this.maestro;
+        this.maestro.sort((p,n)=>{ return (p.id - n.id)});
+        console.log(this.maestro);
+        return this.maestro;
     }
 
     deleteMaestros(idf){

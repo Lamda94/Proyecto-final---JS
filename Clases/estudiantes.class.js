@@ -1,21 +1,18 @@
 class estudiantes{
     constructor(){
-        this.onGetEstudiantes();
     }
 
-    onGetEstudiantes(){
-        db.collection("estudiantes").onSnapshot((querySnapshot) => {
-            this.estudiantes = [];
-            querySnapshot.forEach((doc) => {  
-                let data = doc.data(); 
-                data.idf = doc.id;
-                this.estudiantes.push(data);            
-            });
+    async getEstudiantes(){     
+        this.estudiantes = [];    
+        const querySnapshot = await db.collection("estudiantes").get();
+        querySnapshot.forEach((doc) => {   
+            let data = doc.data(); 
+            data.idf = doc.id;
+            this.estudiantes.push(data);               
         });
-    }
-
-    getEstudiantes(){     
-        return  this.estudiantes;
+        this.estudiantes.sort((p,n)=>{ return (p.id - n.id)});
+        console.log(this.estudiantes);
+        return this.estudiantes;
     }
 
     saveEstudiantes(name, curso){
