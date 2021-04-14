@@ -1,21 +1,16 @@
 class asignaturas{
     constructor(){
-        this.onGetAsignaturas();
     }
 
-    onGetAsignaturas(){
-        db.collection("asignaturas").onSnapshot((querySnapshot) => {
-            this.asignaturas = [];
-            querySnapshot.forEach((doc) => { 
-                let data = doc.data(); 
-                data.idf = doc.id;  
-                this.asignaturas.push(data);               
-            });
-            this.asignaturas.sort((p,n)=>{ return (p.id - n.id); });
+    async getAsignaturas(){ 
+        this.asignaturas = [];  
+        const querySnapshot = await db.collection("asignaturas").get();        
+        querySnapshot.forEach((doc) => { 
+            let data = doc.data(); 
+            data.idf = doc.id;  
+            this.asignaturas.push(data);               
         });
-    }
-
-    getAsignaturas(){     
+        this.asignaturas.sort((p,n)=>{ return (p.id - n.id); });
         return  this.asignaturas;
     }
 

@@ -176,7 +176,7 @@ $(document).ready(()=>{
 
     const getEstudiantes = async ()=>{
         let data = "";
-        const getEstudiantes = objEstudiantes.getEstudiantes();
+        const getEstudiantes = await objEstudiantes.getEstudiantes();
         if (getEstudiantes.length == 0) { 
             data = `<h2 class="mb-4 text-center">Estudiantes</h2>
                     <button type="button" class="btn btn-primary mb-4" id="eNuevo">Nuevo Maestro</button>

@@ -54,9 +54,9 @@ $(document).ready(()=>{
         getMaestros();
     }
 
-    const getMaestros = ()=>{
+    const getMaestros = async ()=>{
         let data = "";
-        const getMaestros = objMaestros.getMaestros();
+        const getMaestros = await objMaestros.getMaestros();
                 
         if (getMaestros.lenght == 0) {   
             console.log("aqui");

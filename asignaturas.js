@@ -4,9 +4,9 @@ $(document).ready(()=>{
         getAsignatura();
     }
     
-    const getAsignatura = () => {   
+    const getAsignatura = async () => {   
         let data="";
-        let listAsiganturas = objAsignaturas.getAsignaturas();
+        let listAsiganturas = await objAsignaturas.getAsignaturas();
         if (listAsiganturas.length == 0) {            
 
             data = `<center><h2 style="margin-top:60px;">Asignaturas</h2></center>
@@ -94,9 +94,9 @@ $(document).ready(()=>{
         getAsignatura();    
     }
 
-    const newAsignatura = () =>{
+    const newAsignatura = async () =>{
         let data = "";
-        let ma = objMaestros.getMaestros();
+        let ma = await objMaestros.getMaestros();
         if (ma.length > 0) {
             let lista = '<select class="form-control" name="inputMaes" id="inputMaes">';
             for (const maes of ma) {
