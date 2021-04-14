@@ -48,7 +48,15 @@ class maestro{
         });     
     }
 
-    searchMaestro(id){
-        return this.maestro.find(m=>m.id==id);
+    async searchMaestro(id){
+        const maestro = [];
+        const querySnapshot = await db.collection("maestros").get()
+        querySnapshot.forEach((doc) => {   
+            let data = doc.data(); 
+            data.idf = doc.id;
+            maestro.push(data);               
+        });
+        maestro.sort((p,n)=>{ return (p.id - n.id)});
+        return maestro.find(m=>m.id==id);
     }
 }

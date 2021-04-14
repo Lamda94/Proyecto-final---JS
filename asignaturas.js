@@ -7,8 +7,7 @@ $(document).ready(()=>{
     const getAsignatura = async () => {   
         let data="";
         let listAsiganturas = await objAsignaturas.getAsignaturas();
-        if (listAsiganturas.length == 0) {            
-
+        if (listAsiganturas.length == 0) {     
             data = `<center><h2 style="margin-top:60px;">Asignaturas</h2></center>
                     <button type="button" class="btn btn-primary mb-4" id="aNuevo">Nueva Asignatura</button>
                     <table class="table table-striped table-borderless">
@@ -21,19 +20,19 @@ $(document).ready(()=>{
                         </thead>
                         <tbody>
                             <tr><td class="text-center" colspan="3">No hay registros de estudiantes</td>
-                            </tbody>
-                            <tfoot class="table-dark">
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Nombre</th>
-                                    <th>curso</th>
-                                </tr>
-                            </tfoot>
-                        </table>`;                   
+                        </tbody>
+                        <tfoot class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>curso</th>
+                            </tr>
+                        </tfoot>
+                    </table>`;                   
         }else{
             let d="";
             for (const asig of listAsiganturas) {
-                let ma = objMaestros.searchMaestro(asig.maestro);
+                let ma = await objMaestros.searchMaestro(asig.maestro);
                 console.log(ma);
                 
                 d  +=  `<tr>
