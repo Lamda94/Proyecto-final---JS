@@ -35,9 +35,9 @@ $(document).ready(()=>{
         });
     }
 
-    const deleteMaestro = (idf,id)=>{
+    const deleteMaestro = async (idf,id)=>{
         objMaestros.deleteMaestros(idf);         
-        const asigna = objAsignaturas.getAsignaturas();
+        const asigna = await objAsignaturas.getAsignaturas();
         console.log("regreso");
         console.log(asigna);
                 
