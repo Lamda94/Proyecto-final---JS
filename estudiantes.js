@@ -47,9 +47,9 @@ $(document).ready(()=>{
          getEstudiantes();         
     }
 
-    const addAsignatura = (id, idf)=>{
+    const addAsignatura = async (id, idf)=>{
         let data = "";
-        let asi = objAsignaturas.getAsignaturas();
+        let asi = await objAsignaturas.getAsignaturas();
         if (asi.length > 0) {
             let lista = '<select class="form-control" name="inputAsig" id="inputAsig">';
             for (const asig of asi) {
