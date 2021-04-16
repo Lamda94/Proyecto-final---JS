@@ -2,7 +2,11 @@ $(document).ready(()=>{
     const setMaestro = ()=>{
         let name = $("#inputName").val();        
         let titulo = $("#inputTitulo").val();
-        objMaestros.saveMaestro(name, titulo);    
+        objMaestros.saveMaestro(name, titulo);  
+        notificaion.fadeIn("slow",()=>{
+
+        });
+          
         getMaestros();    
     }
 
