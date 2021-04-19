@@ -85,87 +85,15 @@ $(document).ready(()=>{
         }    
     }
 
-    const getAsignaturas = (name,d,id, idf)=>{
-        if (d.length == 0) { 
-            let data = `<h2 class="mb-4 text-center">Asignaturas de ${name}</h2>
-                        <button type="button" class="btn btn-primary mb-4"  data-idf="${idf}" id="aSigNuevo">Agregar</button>
-                        <table class="table table-striped table-borderless">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th class="text-center">Nombre</th>
-                                    <th class="text-center">Nota 1</th>
-                                    <th class="text-center">Nota 2</th>
-                                    <th class="text-center">Nota 3</th>
-                                    <th class="text-center">Nota Final</th>
-                                    <th class="text-center">Editar Notas</th>
-                                    <th class="text-center">Eliminar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-center" colspan="7">No hay asignaturas registradas</td>
-                                </tr>
-                            </tbody>
-                            <tfoot class="table-dark">
-                                <tr>
-                                    <th class="text-center">Nombre</th>
-                                    <th class="text-center">Nota 1</th>
-                                    <th class="text-center">Nota 2</th>
-                                    <th class="text-center">Nota 3</th>
-                                    <th class="text-center">Nota Final</th>
-                                    <th class="text-center">Editar Notas</th>
-                                    <th class="text-center">Eliminar</th>
-                                </tr>
-                            </tfoot>
-                        </table>`;                
-            return data;
-        }else{
-            let da = "";
-            for (const dat of d) {
-                da = da + `<tr>
-                                <td class="text-center">${dat.name}</td>
-                                <td class="text-center">${dat.nota1}</td>
-                                <td class="text-center">${dat.nota2}</td>
-                                <td class="text-center">${dat.nota3}</td>
-                                <td class="text-center">${dat.notaf}</td>
-                                <td><button type="button" class="boton btn btn-success" data-idf="${idf}">Editar</button></td>
-                                <td><button type="button" class="btndelete btn btn-danger" data-idf="${idf}" data-name="${dat.name}">Eliminar</button></td>
-                            </tr>`; 
-            }
-
-            const data =    `<h2 class="mb-4 text-center">Asignaturas de ${name}</h2>
-                            <button type="button" class="btn btn-primary mb-4" data-idf="${idf}" id="aSigNuevo">Agregar</button>
-                            <table class="table table-striped table-borderless">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th class="text-center">Nombre</th>
-                                        <th class="text-center">Nota 1</th>
-                                        <th class="text-center">Nota 2</th>
-                                        <th class="text-center">Nota 3</th>
-                                        <th class="text-center">Nota Final</th>
-                                        <th class="text-center">Editar Notas</th>
-                                        <th class="text-center">Eliminar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        ${da}
-                                    </tr>
-                                </tbody>
-                                <tfoot class="table-dark">
-                                    <tr>
-                                        <th class="text-center">Nombre</th>
-                                        <th class="text-center">Nota 1</th>
-                                        <th class="text-center">Nota 2</th>
-                                        <th class="text-center">Nota 3</th>
-                                        <th class="text-center">Nota Final</th>
-                                        <th class="text-center">Editar Notas</th>
-                                        <th class="text-center">Eliminar</th>
-                                    </tr>
-                                </tfoot>
-                            </table>`;        
-            return data;
-        }
+    const getAsignaturas = (name, d, id, idf)=>{
+        const heads = ["Nombre", "Nota 1", "Nota 1", "Nota 1", "Nota Final"];
+        const claves = ["name", "nota1", "nota2", "nota3", "notaf"]; 
+        console.log("d:");
+        console.log(d);
+        
+          
+        const data = templateTable(heads, d, claves,`Asignatura`, true, false, true, idf);
+        return data;
     }
 
     const deleteEstudiante = async (e)=>{
@@ -175,98 +103,35 @@ $(document).ready(()=>{
     }
 
     const getEstudiantes = async ()=>{
-        let data = "";
         const getEstudiantes = await objEstudiantes.getEstudiantes();
-        if (getEstudiantes.length == 0) { 
-            data = `<h2 class="mb-4 text-center">Estudiantes</h2>
-                    <button type="button" class="btn btn-primary mb-4" id="eNuevo">Nuevo Maestro</button>
-                    <table class="table table-striped table-borderless">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>curso</th>
-                                <th>Asignaturas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center" colspan="4">No hay registros de estudiantes</td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>curso</th>
-                                <th>Asignaturas</th>
-                            </tr>
-                        </tfoot>
-                    </table>`;                 
-        }else{
-            let d="";
-            for (const est of getEstudiantes) {
-                d = d + `<tr >
-                            <td id="numero">${est.id}</td>
-                            <td>${est.name}</td>
-                            <td>${est.curso}</td>
-                            <td><button type="button" class="boton btn btn-success" data-id="${est.id}" data-idf="${est.idf}">Ver</button></td>
-                            <td><button type="button" class="btnElimnar btn btn-danger " data-idf="${est.idf}">Eliminar</button></td>
-                        </tr>`;            
-            }
-
-            data = `<h2 class="mb-4 text-center">Estudiantes</h2>
-                    <button type="button" class="btn btn-primary mb-4" id="eNuevo">Nuevo Estudiante</button>
-                    <table class="table table-striped table-borderless">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>curso</th>
-                                <th>Asignaturas</th>
-                                <th>Eliminar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                ${d}
-                            </tr>
-                        </tbody>
-                        <tfoot class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>curso</th>
-                                <th>Asignaturas</th>
-                                <th>Eliminar</th>
-                            </tr>
-                        </tfoot>
-                    </table>`;        
-        }
+        const heads = ["Id", "Nombre", "Curso"];
+        const claves = ["id", "name", "curso"];   
+        const data = templateTable(heads, getEstudiantes, claves,"Estudiante", false, true, true, "");
         contenido.fadeOut("slow",()=>{
             contenido.html(data);
         });        
         contenido.fadeIn("slow",()=>{
-            const btnNuevoM = $("#eNuevo");
-            $(".btnElimnar").click(deleteEstudiante);
+            const btnNuevoM = $("#Nuevo");
+            $(".btnDelete").click(deleteEstudiante);
             $(".boton").click((e)=>{
                 let valores = e.target.dataset.id;
                 let idf = e.target.dataset.idf;
                 const d = objEstudiantes.searchEstudiantes(valores);
+                d.idf = idf;
                 const data = getAsignaturas(d.name, d.asignaturas, d.id, idf);
                 contenido.fadeOut("slow",()=>{
                     contenido.html(data);
                 });        
                 contenido.fadeIn("slow",()=>{
-                    const btnAgAsi = $("#aSigNuevo");
+                    const btnAgAsi = $("#Nuevo");
                     btnAgAsi.click((e)=>{
                         let idf = e.target.dataset.idf;
                         addAsignatura(d.id, idf)            
                     });
-                    const btndelete = $(".btndelete");
+                    const btndelete = $(".btnDelete");
                     btndelete.click((e)=>{
                         const idf = e.target.dataset.idf;
-                        const name = e.target.dataset.name;
+                        const name = e.target.dataset.id;
                         removeAsignatura(idf, name);
                     });
                 });

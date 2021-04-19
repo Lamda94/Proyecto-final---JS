@@ -5,75 +5,23 @@ $(document).ready(()=>{
     }
     
     const getAsignatura = async () => {   
-        let data="";
+        const asignaturas = [];
         let listAsiganturas = await objAsignaturas.getAsignaturas();
-        if (listAsiganturas.length == 0) {     
-            data = `<center><h2 style="margin-top:60px;">Asignaturas</h2></center>
-                    <button type="button" class="btn btn-primary mb-4" id="aNuevo">Nueva Asignatura</button>
-                    <table class="table table-striped table-borderless">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Maestro</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="text-center" colspan="3">No hay registros de estudiantes</td>
-                        </tbody>
-                        <tfoot class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>curso</th>
-                            </tr>
-                        </tfoot>
-                    </table>`;                   
-        }else{
-            let d="";
-            for (const asig of listAsiganturas) {
-                let ma = await objMaestros.searchMaestro(asig.maestro);
-                console.log(ma);
-                
-                d  +=  `<tr>
-                            <td>${asig.id}</td>
-                            <td>${asig.name}</td>
-                            <td>${ma.name}</td>
-                            <td><input type ="button" class="btnDelete btn btn-danger" data-idf="${asig.idf}" id="asDelete" value="Eliminar"></td>
-                        </tr>`;               
-            }
-
-            data = `<center><h2 style="margin-top:60px;">Asignaturas</h2></center>
-                    <button type="button" class="btn btn-primary mb-4" id="aNuevo">Nueva Asignatura</button>
-                    <table class="table table-striped table-borderless">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Maestro</th>
-                                <th>Eliminar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                ${d}
-                            </tr>
-                        </tbody>
-                        <tfoot class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>curso</th>
-                                <th>Eliminar</th>
-                            </tr>
-                        </tfoot>
-                    </table>`;   
+        for (let doc  of listAsiganturas) {
+            const ma = await objMaestros.searchMaestro(doc.maestro);
+            doc.maestro = ma.name;
+            asignaturas.push(doc);
         }
+        console.log("data");
+        console.log(asignaturas); 
+        const heads = ["Id", "Nombre", "Maestro"]; 
+        const claves = ["id", "name", "maestro"];          
+        const data = templateTable(heads, asignaturas, claves, "Asignatura", false, false, true, "");       
         contenido.fadeOut("slow",()=>{
             contenido.html(data);
         });        
         contenido.fadeIn("slow",()=>{
-            const btnNuevoM = $("#aNuevo");
+            const btnNuevoM = $("#Nuevo");
             const btnDelete = $(".btnDelete");
             btnDelete.click((e)=>{
                 let idf = e.target.dataset.idf;

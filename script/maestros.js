@@ -1,10 +1,20 @@
+//------------- Funciones de interaccion con los maestros ----------------------------------
+//Esta funcion construye una tabla con los datos que le envian
+//-> getMaestros : los titulos de cada columna
+//-> data: un objeto con los datos que se van a pintar en la tabla
+//-> claves: las claves para acceder alos datos del onjeto
+//-> titulo: titulo que llevará la tabla
+//-> edit: si se agrega o no un boton editar (true, false)
+//-> ver: si se agrega o no un boton ver (true, false)
+//-> eli: si se agrega o no un boton aliminar (true, false)
+//-> idf: identificador del documento en firebase en caso de que no este incluido en el objeto de datos.
 $(document).ready(()=>{
     const setMaestro = ()=>{
         let name = $("#inputName").val();        
         let titulo = $("#inputTitulo").val();
         objMaestros.saveMaestro(name, titulo);  
         notificaion.fadeIn("slow",()=>{
-
+      
         });
           
         getMaestros();    
@@ -58,78 +68,17 @@ $(document).ready(()=>{
         getMaestros();
     }
 
-    const getMaestros = async ()=>{
-        let data = "";
+    const getMaestros = async ()=>{        
         const getMaestros = await objMaestros.getMaestros();
-                
-        if (getMaestros.lenght == 0) {   
-            console.log("aqui");
-                     
-            data = `<h2 class="mb-4 text-center">Maestros</h2>
-                    <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
-                    <table class="table table-striped table-borderless">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Titulo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center" colspan="3">No hay registros de maestros</td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Titulo</th>
-                            </tr>
-                        </tfoot>
-                    </table>`;       
-        }else{            
-            let d = "";
-            for (const maestro of getMaestros) {
-                d += `<tr>
-                        <td>${maestro.id}</td>
-                        <td>${maestro.name}</td>
-                        <td>${maestro.title}</td>
-                        <td><input type ="button" class="btnDeleteM btn btn-danger" data-idf="${maestro.idf}" data-id="${maestro.id}" value="Eliminar"></td>
-                    </tr>`;
-            }
-            data =  `<h2 class="mb-4 text-center">Maestros</h2>
-                    <button type="button" class="btn btn-primary mb-4" id="mNuevo">Nuevo Maestro</button>
-                    <table class="table table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Titulo</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        ${d}
-                        </tr>
-                    </tbody>
-                    <tfoot class="table-dark">
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Titulo</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </tfoot>
-                    </table>`; 
-        }
+        const heads = ["Id", "Nombre", "Titulo"]; 
+        const claves = ["id", "name", "title"];          
+        const data = templateTable(heads, getMaestros, claves, "Maestro", false, false, true, "");
         contenido.fadeOut("slow",()=>{
             contenido.html(data);
         });        
         contenido.fadeIn("slow",()=>{
-            const btnNuevoM = $("#mNuevo");
-            const btnDeleteM = $(".btnDeleteM");
+            const btnNuevoM = $("#Nuevo");
+            const btnDeleteM = $(".btnDelete");
             btnDeleteM.click((e)=>{
                 let idf = e.target.dataset.idf;
                 let id = e.target.dataset.id;
