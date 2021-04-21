@@ -1,13 +1,9 @@
-//------------- Funciones de interaccion con los maestros ----------------------------------
-//Esta funcion construye una tabla con los datos que le envian
-//-> getMaestros : los titulos de cada columna
-//-> data: un objeto con los datos que se van a pintar en la tabla
-//-> claves: las claves para acceder alos datos del onjeto
-//-> titulo: titulo que llevará la tabla
-//-> edit: si se agrega o no un boton editar (true, false)
-//-> ver: si se agrega o no un boton ver (true, false)
-//-> eli: si se agrega o no un boton aliminar (true, false)
-//-> idf: identificador del documento en firebase en caso de que no este incluido en el objeto de datos.
+//------------------------------------------ Funciones de interaccion con los maestros ---------------------------------------------------
+//-> getMaestros : consulta los registros de la tabla maestros y los pinta en el dom haciendo uso del del template de las tablas.
+//-> newMaestro: Pinta en el dom un fromaulario para el registro de un nuevo maestro.
+//-> setMaestro: captura los datos del formulario y los envia ala bd haciendo uso de un objeto de la clase maestros
+//-> deleteMaestro: captura el id del maestro que se desea eliminar y lo envia al objeto de la clase maestros para eliminar el registro. 
+
 $(document).ready(()=>{
     const setMaestro = ()=>{
         let name = $("#inputName").val();        

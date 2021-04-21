@@ -1,3 +1,12 @@
+//-------------------------------------------------------- Clase estudiantes ----------------------------------------------------------------------------------
+//--> getEstudiantes: Consulta la db de estudiantes en firebase y organiza los datos para retornarlos.
+//--> saveEstudiantes: Recibe los datos del nuevo estudiante y reliza el registro del nuevo estudiante en db de firebase
+//--> deleteEstudiantes: recibe el identificador de un registro en firebase y lo elimina del la db.
+//--> saveAsignatura: toma los datos de la asignatura que se le va agregar al estudiante y edita el registro del estudiante agregandole la nueva asignatura.
+//--> removeAsignaturas: toma el id del estudiante, los datos de la asignatura y edita el registro del estudiante removiendo la asignatura seleccionada.
+//--> searchEstudiantes: mediante el id del estudiante devuelve el registro del estudiante que busca.
+
+
 class estudiantes{
     constructor(){
     }

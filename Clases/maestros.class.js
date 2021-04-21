@@ -1,3 +1,9 @@
+//-------------------------------------------------------- Clase maestros ----------------------------------------------------------------------------------
+//--> getMaestros: Consulta la db de maestros en firebase y organiza los datos para retornarlos.
+//--> saveMaestro: Recibe los datos del nuevo maestro y reliza el registro del nuevo maestro en db de firebase
+//--> deleteMaestros: recibe el identificador de un registro en firebase y lo elimina del la db.
+//--> searchMaestro: mediante el id del maestro devuelve el registro del maestro que busca.
+
 class maestro{
     constructor (){
     }

@@ -1,4 +1,4 @@
-//Funcion templateTable
+//------------- Funcion templateTable ----------------------------------
 //Esta funcion construye una tabla con los datos que le envian
 //-> head: los titulos de cada columna
 //-> data: un objeto con los datos que se van a pintar en la tabla

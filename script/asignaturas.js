@@ -1,3 +1,9 @@
+//------------------------------------------ Funciones de interaccion con las Asignaturas ---------------------------------------------------
+//-> getAsignatura : consulta los registros de la tabla asignaturas y los pinta en el dom haciendo uso del del template de las tablas.
+//-> newAsignatura: Pinta en el dom un formulario para el registro de una nueva asignatura.
+//-> setAsignaturas: captura los datos del formulario y los envia ala db haciendo uso de un objeto de la clase asignaturas
+//-> deleteAsignatura: captura el id de la asignatura que se desea eliminar y lo envia mediante el objeto de la clase asignaturas para eliminar el registro. 
+
 $(document).ready(()=>{    
     const deleteAsignatura = (idf)=>{
         objAsignaturas.deleteAsignatura(idf); 

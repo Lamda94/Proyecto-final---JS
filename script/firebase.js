@@ -1,4 +1,4 @@
- // Your web app's Firebase configuration
+ // Variable de configuracion de firebase
  var firebaseConfig = {
     apiKey: "AIzaSyD1n0wR2r9jxJJF4R-ipYTZSMMRaVsOz3o",
     authDomain: "platformschool-2d9d2.firebaseapp.com",
@@ -7,5 +7,5 @@
     messagingSenderId: "545437900478",
     appId: "1:545437900478:web:eaaced02b71e304ccbc8ef"
 };
-// Initialize Firebase
+//inicializacion Firebase
 firebase.initializeApp(firebaseConfig);

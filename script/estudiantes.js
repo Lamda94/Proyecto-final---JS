@@ -1,3 +1,13 @@
+//------------------------------------------ Funciones de interaccion con las Estudiantes ---------------------------------------------------
+//-> getEstudiantes : consulta los registros de la tabla estudiantes y los pinta en el dom haciendo uso del del template de las tablas.
+//-> newEstudiantes: Pinta en el dom un formulario para el registro de una nueva estudiantes.
+//-> setEstudiantes: captura los datos del formulario y los envia ala db haciendo uso de un objeto de la clase estudiantes
+//-> deleteEstudiante: captura el id del estudiante que se desea eliminar y lo envia mediante el objeto de la clase estudiantes para eliminar el registro. 
+//-> getAsignaturas : Mediante el id de un estudiante busca en la db el regustro de las asignaturas que le han asignado al estudiante y las pinta en el dom.
+//-> addAsignatura: pinta un formulario con la lista de asignaturas registradas para agregarle una al estudiante.
+//-> setAsigEstu: captura la asignatura seleccionada y se la asigna al estudiante.
+//-> removeAsignatura: mediante el id de una de las asignaturas del estudiante se busca el registro de esta asignatura y se elimina de la lista de las asignaturas asignadas al estudiante.
+
 $(document).ready(()=>{
     const setEstudiantes = ()=>{
         let name = $("#inputName").val();
@@ -47,7 +57,7 @@ $(document).ready(()=>{
          getEstudiantes();         
     }
 
-    const addAsignatura = async (id, idf)=>{
+    const addAsignatura = async (idf)=>{
         let data = "";
         let asi = await objAsignaturas.getAsignaturas();
         if (asi.length > 0) {
@@ -85,7 +95,7 @@ $(document).ready(()=>{
         }    
     }
 
-    const getAsignaturas = (name, d, id, idf)=>{
+    const getAsignaturas = (d, idf)=>{
         const heads = ["Nombre", "Nota 1", "Nota 1", "Nota 1", "Nota Final"];
         const claves = ["name", "nota1", "nota2", "nota3", "notaf"]; 
         console.log("d:");
@@ -118,7 +128,7 @@ $(document).ready(()=>{
                 let idf = e.target.dataset.idf;
                 const d = objEstudiantes.searchEstudiantes(valores);
                 d.idf = idf;
-                const data = getAsignaturas(d.name, d.asignaturas, d.id, idf);
+                const data = getAsignaturas(d.asignaturas, idf);
                 contenido.fadeOut("slow",()=>{
                     contenido.html(data);
                 });        
@@ -126,7 +136,7 @@ $(document).ready(()=>{
                     const btnAgAsi = $("#Nuevo");
                     btnAgAsi.click((e)=>{
                         let idf = e.target.dataset.idf;
-                        addAsignatura(d.id, idf)            
+                        addAsignatura(idf)            
                     });
                     const btndelete = $(".btnDelete");
                     btndelete.click((e)=>{
