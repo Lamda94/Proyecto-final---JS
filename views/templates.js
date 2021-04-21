@@ -39,7 +39,7 @@ const templateTable = (head, data, claves, titulo, edit, ver, eli, idf)=>{
                 tbody += `<td>${d[indicador]}</td>`;                
             }
             if (edit) {
-                tbody += `<td><button type="button" class="boton btn btn-success" data-idf="${idf}">Editar</button></td>`; 
+                tbody += `<td><button type="button" class="boton btn btn-success" data-idf="${idf}" data-name=${d.name}>Editar</button></td>`; 
             }
             if (ver) {
                 tbody += `<td><button type="button" class="boton btn btn-success" data-id="${d.id}" data-idf="${idf}">Ver</button></td>`;

@@ -44,16 +44,16 @@ $(document).ready(()=>{
         
     }
 
-    const setAsigEstu = (idf)=>{
+    const setAsigEstu = async (idf)=>{
         let asig = $("#inputAsig").val();
         console.log(asig);
 
-        objEstudiantes.saveAsignatura(idf, asig);    
+        await objEstudiantes.saveAsignatura(idf, asig);    
         getEstudiantes(); 
     }
 
-    const removeAsignatura = (idf,name)=>{
-         objEstudiantes.removeAsignaturas(idf,name);
+    const removeAsignatura = async (idf,name)=>{
+         await objEstudiantes.removeAsignaturas(idf,name);
          getEstudiantes();         
     }
 
@@ -95,6 +95,35 @@ $(document).ready(()=>{
         }    
     }
 
+    const updateAsignatura = (name, idf)=>{
+       const d = objEstudiantes.searchEstudiantes(idf);
+       const asig = d.asignaturas.find(e=>e.name===name);
+       console.log(asig);
+       
+       const data = `<div id="formulario" class="d-flex justify-content-center ">
+                        <form id="fAsAgregar" class="col-7">
+                            <h2 class="text-center">Notas de la asignatura ${name}</h2>
+                            <div class="mb-3">
+                                <label for="inputNota1" class="form-label">Nota 1</label>
+                                <input type="number" class="form-control" id="inputNota1" placeholder="0" value="${asig.nota1}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputNota2" class="form-label">Nota 2</label>
+                                <input type="number" class="form-control" id="inputNota2" placeholder="0" value="${asig.nota2}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputNota3" class="form-label">Nota 3</label>
+                                <input type="number" class="form-control" id="inputNota3" placeholder="0" value="${asig.nota3}">
+                            </div>
+                            <div class="mb-3">
+                                <input type ="button" class="btn btn-primary" id="Agregar" data-idf = "${idf}" data-name = "${ name }" value="Agregar">
+                                <input type ="button" class="btn btn-danger" id="Cancelar" value="Cancelar">
+                            </div>
+                        </form>
+                    </div>`;
+        return data;
+    }
+
     const getAsignaturas = (d, idf)=>{
         const heads = ["Nombre", "Nota 1", "Nota 1", "Nota 1", "Nota Final"];
         const claves = ["name", "nota1", "nota2", "nota3", "notaf"]; 
@@ -126,7 +155,7 @@ $(document).ready(()=>{
             $(".boton").click((e)=>{
                 let valores = e.target.dataset.id;
                 let idf = e.target.dataset.idf;
-                const d = objEstudiantes.searchEstudiantes(valores);
+                const d = objEstudiantes.searchEstudiantes(idf);
                 d.idf = idf;
                 const data = getAsignaturas(d.asignaturas, idf);
                 contenido.fadeOut("slow",()=>{
@@ -138,11 +167,27 @@ $(document).ready(()=>{
                         let idf = e.target.dataset.idf;
                         addAsignatura(idf)            
                     });
+
                     const btndelete = $(".btnDelete");
                     btndelete.click((e)=>{
                         const idf = e.target.dataset.idf;
                         const name = e.target.dataset.id;
                         removeAsignatura(idf, name);
+                    });
+
+                    $(".boton").click((e)=>{
+                        const name = e.target.dataset.name;
+                        const idf = e.target.dataset.idf;
+                        const data = updateAsignatura(name, idf);
+                        contenido.fadeOut("slow",()=>{
+                            contenido.html(data);
+                        });
+                        contenido.fadeIn("slow", ()=>{
+                            $("#Agregar").click(()=>{
+                                saveNotas(name, idf);                               
+                            });
+                            $("#Cancelar").click(cancelar);
+                        });  
                     });
                 });
                 
@@ -150,6 +195,42 @@ $(document).ready(()=>{
             btnNuevoM.click(newEstudiantes);
         });        
     }
+    
+    const saveNotas = async (name,idf)=>{        
+        let n1 = parseFloat($("#inputNota1").val()), n2 = parseFloat($("#inputNota2").val()), n3 = parseFloat($("#inputNota3").val());
+        if (isNaN(n1)) {
+            n1 = 0;
+        }
+        if(isNaN(n2)){
+            n2 = 0;
+        }
+        if(isNaN(n3)){
+            n3 = 0;
+        }
+
+        if (n1>5 || n1<0 || n2>5 || n2<0 || n3>5 || n3<0) {
+            const not  = `<div class="alert alert-danger" role="alert">
+                                La nota no debe ser inferior a 0 ni superior a 5.
+                            </div>`;
+            notificaion.fadeIn(3000,()=>{
+                notificaion.html(not)
+            });
+            setTimeout(()=>{
+                notificaion.fadeOut("slow");
+            }, 5000)
+        }else{
+            let nf = (n1+n2+n3)/3;
+            nf = nf.toFixed(2);            
+            const data = {name, nota1:n1, nota2:n2, nota3:n3, notaf:nf};
+            await objEstudiantes.removeAsignaturas(idf,name);       
+            await objEstudiantes.updateAsignatura(idf,data); 
+            getEstudiantes();
+        }
+
+        
+    }
+
+    const cancelar = ()=>{ getEstudiantes() };
 
     const btnEstudiantes = $("#estudiantes");
     btnEstudiantes.click(getEstudiantes);

@@ -55,7 +55,25 @@ class estudiantes{
             }
         });
         data.asignaturas.push(asig);
-        let res = await db.collection("estudiantes").doc(id).update(data);
+        await db.collection("estudiantes").doc(id).update(data);
+    }
+
+    async updateAsignatura(ida, dat){
+        console.log("ingreso");
+        
+        const data = this.estudiantes.find((es)=>{
+            if (es.idf == ida) {
+                return es;
+            }else{
+                console.log(`${es.idf} == ${ida}`);
+            }
+        });
+        delete data.idf;
+        console.log(data);  
+        data.asignaturas.push(dat);
+        console.log("pushio");      
+        console.log(data);          
+        await db.collection("estudiantes").doc(ida).update(data);
     }
 
     async removeAsignaturas(idf, name){
@@ -72,7 +90,7 @@ class estudiantes{
     }
 
     searchEstudiantes(ide){
-        let data = this.estudiantes.find(es=>es.id == ide);
+        let data = this.estudiantes.find(es=>es.idf == ide);
         return data;
     }
 }
