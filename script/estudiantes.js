@@ -12,7 +12,18 @@ $(document).ready(()=>{
     const setEstudiantes = ()=>{
         let name = $("#inputName").val();
         let curso = $("#inputCurso").val();
-        objEstudiantes.saveEstudiantes(name, curso);    
+        objEstudiantes.saveEstudiantes(name, curso);  
+        const not  = `<div class="alert alert-success" role="alert">
+                        Estudiante registrado correctamente.
+                     </div>`;
+        notificaion.fadeIn("slow",()=>{
+            notificaion.html(not)
+        });
+        setTimeout(()=>{
+            notificaion.fadeOut("slow", ()=>{
+                notificaion.html("");
+            })
+        }, 5000)  
         getEstudiantes();    
     }
 
@@ -49,12 +60,36 @@ $(document).ready(()=>{
         console.log(asig);
 
         await objEstudiantes.saveAsignatura(idf, asig);    
+        
+        const not  = `<div class="alert alert-success" role="alert">
+                                Asignatura agregada correctamente.
+                          </div>`;
+        notificaion.fadeIn("slow",()=>{
+            notificaion.html(not)
+        });
         getEstudiantes(); 
+        setTimeout(()=>{
+            notificaion.fadeOut("slow", ()=>{
+                notificaion.html("");
+            })
+        }, 5000)
     }
 
     const removeAsignatura = async (idf,name)=>{
          await objEstudiantes.removeAsignaturas(idf,name);
-         getEstudiantes();         
+         const not  = `<div class="alert alert-success" role="alert">
+                                Asignatura removida correctamente.
+                          </div>`;
+        notificaion.fadeIn("slow",()=>{
+            notificaion.html(not)
+        });
+        getEstudiantes();  
+        setTimeout(()=>{
+            notificaion.fadeOut("slow", ()=>{
+                notificaion.html("");
+            })
+        }, 5000)
+                
     }
 
     const addAsignatura = async (idf)=>{
@@ -90,8 +125,18 @@ $(document).ready(()=>{
                 $("#asCancelar").click(getEstudiantes);
             });           
         }else{
-            alert("Es necesario el registro de almenos una asignatura");
-            getAsignaturas();
+            const not  = `<div class="alert alert-success" role="alert">
+                                Se necesita el registro mínimo de un maestro. 
+                          </div>`;
+            notificaion.fadeIn("slow",()=>{
+                notificaion.html(not)
+            });
+            getAsignaturas();           
+            setTimeout(()=>{
+                notificaion.fadeOut("slow", ()=>{
+                    notificaion.html("");
+                });
+            }, 5000)            
         }    
     }
 
@@ -138,7 +183,18 @@ $(document).ready(()=>{
     const deleteEstudiante = async (e)=>{
         let idf = e.target.dataset.idf;
         const msj = await objEstudiantes.deleteEstudiantes(idf);
-        getEstudiantes();       
+        const not  = `<div class="alert alert-success" role="alert">
+                            Estudiante eliminado correctamente.
+                      </div>`;
+        notificaion.fadeIn("slow",()=>{
+            notificaion.html(not)
+        });
+        getEstudiantes();  
+        setTimeout(()=>{
+            notificaion.fadeOut("slow", ()=>{
+                notificaion.html("");
+            })
+        }, 5000)     
     }
 
     const getEstudiantes = async ()=>{
@@ -212,11 +268,13 @@ $(document).ready(()=>{
             const not  = `<div class="alert alert-danger" role="alert">
                                 La nota no debe ser inferior a 0 ni superior a 5.
                             </div>`;
-            notificaion.fadeIn(3000,()=>{
+            notificaion.fadeIn("slow",()=>{
                 notificaion.html(not)
             });
             setTimeout(()=>{
-                notificaion.fadeOut("slow");
+                notificaion.fadeOut("slow",()=>{
+                    notificaion.html("");
+                });
             }, 5000)
         }else{
             let nf = (n1+n2+n3)/3;
@@ -224,10 +282,19 @@ $(document).ready(()=>{
             const data = {name, nota1:n1, nota2:n2, nota3:n3, notaf:nf};
             await objEstudiantes.removeAsignaturas(idf,name);       
             await objEstudiantes.updateAsignatura(idf,data); 
-            getEstudiantes();
-        }
-
-        
+            const not  = `<div class="alert alert-success" role="alert">
+                                Registro de notas actualizado.
+                          </div>`;
+            notificaion.fadeIn("slow",()=>{
+                notificaion.html(not)
+            });
+            getEstudiantes();            
+            setTimeout(()=>{
+                notificaion.fadeOut("slow", ()=>{
+                    notificaion.html("");
+                });
+            }, 5000)
+        }        
     }
 
     const cancelar = ()=>{ getEstudiantes() };

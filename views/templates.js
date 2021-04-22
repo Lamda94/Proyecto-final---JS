@@ -31,6 +31,7 @@ const templateTable = (head, data, claves, titulo, edit, ver, eli, idf)=>{
         tbody = `<td class="text-center" colspan="${i}">No hay registros de ${titulo}s</td>`;            
     }else{
         for (const d of data) {
+            tbody += `<tr>`;
             if(idf===""){
                 idf = d.idf;
             }
@@ -50,6 +51,10 @@ const templateTable = (head, data, claves, titulo, edit, ver, eli, idf)=>{
                 }else{
                     tbody += `<td><input type ="button" class="btnDelete btn btn-danger" data-idf="${idf}" data-id="${d.id}" value="Eliminar"></td>`;   
                 }
+            }
+            tbody += `</tr>`;
+            if(idf===d.idf){
+                idf = "";
             }
         }
     }
