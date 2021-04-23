@@ -9,11 +9,18 @@ $(document).ready(()=>{
         let name = $("#inputName").val();        
         let titulo = $("#inputTitulo").val();
         objMaestros.saveMaestro(name, titulo);  
+        const not  = `<div class="alert alert-success" role="alert">
+                            Maestro registrado correctamente.
+                    </div>`;
         notificaion.fadeIn("slow",()=>{
-      
+        notificaion.html(not)
         });
-          
-        getMaestros();    
+        getMaestros();     
+        setTimeout(()=>{
+            notificaion.fadeOut("slow", ()=>{
+                notificaion.html("");
+            });
+        }, 5000);  
     }
 
     const newMaestro = () =>{
@@ -61,7 +68,18 @@ $(document).ready(()=>{
             }
         }  
         
-        getMaestros();
+        const not  = `<div class="alert alert-success" role="alert">
+                            Maestro eliminado correctamente.
+                    </div>`;
+        notificaion.fadeIn("slow",()=>{
+        notificaion.html(not)
+        });
+        getMaestros();     
+        setTimeout(()=>{
+            notificaion.fadeOut("slow", ()=>{
+                notificaion.html("");
+            });
+        }, 5000);  
     }
 
     const getMaestros = async ()=>{        
