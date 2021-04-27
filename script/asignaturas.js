@@ -6,19 +6,8 @@
 
 $(document).ready(()=>{    
     const deleteAsignatura = async (idf)=>{
-        await objAsignaturas.deleteAsignatura(idf); 
-        const not  = `<div class="alert alert-success" role="alert">
-                            Asignatura eliminado correctamente.
-                    </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
-        getAsignatura();
-        setTimeout(()=>{
-        notificaion.fadeOut("slow", ()=>{
-            notificaion.html("");
-        })
-        }, 5000)         
+        const msj = await objAsignaturas.deleteAsignatura(idf); 
+        notificacion(msj, getAsignatura, "success");  
     }
     
     const getAsignatura = async () => {   
@@ -49,20 +38,8 @@ $(document).ready(()=>{
     const setAsignaturas = async ()=>{
         let name = $("#inputName").val();        
         let maestro = $("#inputMaes").val();
-        await objAsignaturas.saveAsignaturas(name, maestro);    
-        
-        const not  = `<div class="alert alert-success" role="alert">
-                            Asignatura registrada correctamente.
-                    </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
-        getAsignatura();
-        setTimeout(()=>{
-        notificaion.fadeOut("slow", ()=>{
-            notificaion.html("");
-        })
-        }, 5000)          
+        const msj = await objAsignaturas.saveAsignaturas(name, maestro);        
+        notificacion(msj, getAsignatura, "success");  
     }
 
     const newAsignatura = async () =>{

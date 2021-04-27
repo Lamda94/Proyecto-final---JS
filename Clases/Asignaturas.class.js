@@ -20,29 +20,21 @@ class asignaturas{
         return  this.asignaturas;
     }
 
-    saveAsignaturas(name, maestro){
-        let id = this.asignaturas.length;
-        console.log(`lenght: ${id}`);        
-        if (id == 0) {
-           id = 1; 
-           console.log(`id: ${id}`);
-        } else {
-            id = this.asignaturas[id-1].id;
-            console.log(`ultimo id: ${id}`);
-            id++;
-            console.log(`id: ${id}`);
-        }
-        console.log(id);        
-        let data = {id, maestro, name};
-        console.log(data);
-        
-        db.collection("asignaturas").add(data)
-        .then((docRef) => {
-            console.log("documento guardado con ID: ", docRef.id);
-        })
-        .catch((error) => {
+    async saveAsignaturas(name, maestro){
+        try {
+            let id = this.asignaturas.length;       
+            if (id == 0) {
+                id = 1; 
+            } else {
+                id = this.asignaturas[id-1].id;
+                id++;
+            } 
+            let data = {id, maestro, name};
+            await db.collection("asignaturas").add(data);
+            return "Asignatura registrada correctamente";
+        } catch (error) {
             console.error("Error agregando el documento: ", error);
-        });     
+        } 
     }
 
     async deleteAsignatura(idf){
