@@ -7,18 +7,7 @@
 $(document).ready(()=>{    
     const deleteAsignatura = (idf)=>{
         objAsignaturas.deleteAsignatura(idf); 
-        const not  = `<div class="alert alert-success" role="alert">
-                            Asignatura eliminada correctamente.
-                    </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
-        getAsignatura();    
-        setTimeout(()=>{
-            notificaion.fadeOut("slow", ()=>{
-                notificaion.html("");
-            });
-        }, 5000);          
+        getAsignatura();
     }
     
     const getAsignatura = async () => {   
@@ -55,18 +44,7 @@ $(document).ready(()=>{
         let maestro = $("#inputMaes").val();
         console.log(maestro);
         objAsignaturas.saveAsignaturas(name, maestro);    
-        const not  = `<div class="alert alert-success" role="alert">
-                            Asignatura registrada correctamente.
-                    </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
         getAsignatura();    
-        setTimeout(()=>{
-            notificaion.fadeOut("slow", ()=>{
-                notificaion.html("");
-            });
-        }, 5000);    
     }
 
     const newAsignatura = async () =>{
@@ -103,18 +81,8 @@ $(document).ready(()=>{
                 $("#asCancelar").click(getAsignatura);  
             });  
         }else{
-            const not  = `<div class="alert alert-danger" role="alert">
-                                Es necesario el registro de al menos un maestro.
-                          </div>`;
-            notificaion.fadeIn("slow",()=>{
-                notificaion.html(not)
-            });
-            getAsignatura();     
-            setTimeout(()=>{
-                notificaion.fadeOut("slow", ()=>{
-                    notificaion.html("");
-                });
-            }, 5000);
+            alert("es necesario el registro de al menos un maestro.");
+            getMaestros();
         }    
     }
 
