@@ -9,22 +9,11 @@
 //-> removeAsignatura: mediante el id de una de las asignaturas del estudiante se busca el registro de esta asignatura y se elimina de la lista de las asignaturas asignadas al estudiante.
 
 $(document).ready(()=>{
-    const setEstudiantes = ()=>{
+    const setEstudiantes = async ()=>{
         let name = $("#inputName").val();
         let curso = $("#inputCurso").val();
-        objEstudiantes.saveEstudiantes(name, curso);  
-        const not  = `<div class="alert alert-success" role="alert">
-                        Estudiante registrado correctamente.
-                     </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
-        setTimeout(()=>{
-            notificaion.fadeOut("slow", ()=>{
-                notificaion.html("");
-            })
-        }, 5000)  
-        getEstudiantes();    
+        const msj = await objEstudiantes.saveEstudiantes(name, curso); 
+        notificacion(msj, getEstudiantes, "success");   
     }
 
     const newEstudiantes = () =>{
@@ -57,39 +46,14 @@ $(document).ready(()=>{
 
     const setAsigEstu = async (idf)=>{
         let asig = $("#inputAsig").val();
-        console.log(asig);
 
-        await objEstudiantes.saveAsignatura(idf, asig);    
-        
-        const not  = `<div class="alert alert-success" role="alert">
-                                Asignatura agregada correctamente.
-                          </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
-        getEstudiantes(); 
-        setTimeout(()=>{
-            notificaion.fadeOut("slow", ()=>{
-                notificaion.html("");
-            })
-        }, 5000)
+        const msj = await objEstudiantes.saveAsignatura(idf, asig);    
+        notificacion(msj, getEstudiantes, "success");  
     }
 
     const removeAsignatura = async (idf,name)=>{
-         await objEstudiantes.removeAsignaturas(idf,name);
-         const not  = `<div class="alert alert-success" role="alert">
-                                Asignatura removida correctamente.
-                          </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
-        getEstudiantes();  
-        setTimeout(()=>{
-            notificaion.fadeOut("slow", ()=>{
-                notificaion.html("");
-            })
-        }, 5000)
-                
+         const msj = await objEstudiantes.removeAsignaturas(idf,name);
+         notificacion(msj, getEstudiantes, "success");                
     }
 
     const addAsignatura = async (idf)=>{
@@ -125,18 +89,7 @@ $(document).ready(()=>{
                 $("#asCancelar").click(getEstudiantes);
             });           
         }else{
-            const not  = `<div class="alert alert-success" role="alert">
-                                Se necesita el registro mínimo de un maestro. 
-                          </div>`;
-            notificaion.fadeIn("slow",()=>{
-                notificaion.html(not)
-            });
-            getAsignaturas();           
-            setTimeout(()=>{
-                notificaion.fadeOut("slow", ()=>{
-                    notificaion.html("");
-                });
-            }, 5000)            
+            notificacion("Se necesita el registro mínimo de un maestro", getAsignaturas, "danger");  
         }    
     }
 
@@ -183,18 +136,7 @@ $(document).ready(()=>{
     const deleteEstudiante = async (e)=>{
         let idf = e.target.dataset.idf;
         const msj = await objEstudiantes.deleteEstudiantes(idf);
-        const not  = `<div class="alert alert-success" role="alert">
-                            Estudiante eliminado correctamente.
-                      </div>`;
-        notificaion.fadeIn("slow",()=>{
-            notificaion.html(not)
-        });
-        getEstudiantes();  
-        setTimeout(()=>{
-            notificaion.fadeOut("slow", ()=>{
-                notificaion.html("");
-            })
-        }, 5000)     
+        notificacion(msj, getEstudiantes, "success");    
     }
 
     const getEstudiantes = async ()=>{
@@ -265,35 +207,14 @@ $(document).ready(()=>{
         }
 
         if (n1>5 || n1<0 || n2>5 || n2<0 || n3>5 || n3<0) {
-            const not  = `<div class="alert alert-danger" role="alert">
-                                La nota no debe ser inferior a 0 ni superior a 5.
-                            </div>`;
-            notificaion.fadeIn("slow",()=>{
-                notificaion.html(not)
-            });
-            setTimeout(()=>{
-                notificaion.fadeOut("slow",()=>{
-                    notificaion.html("");
-                });
-            }, 5000)
+            notificacion("La nota no debe ser inferior a 0 ni superior a 5", ()=>{}, "danger"); 
         }else{
             let nf = (n1+n2+n3)/3;
             nf = nf.toFixed(2);            
             const data = {name, nota1:n1, nota2:n2, nota3:n3, notaf:nf};
             await objEstudiantes.removeAsignaturas(idf,name);       
-            await objEstudiantes.updateAsignatura(idf,data); 
-            const not  = `<div class="alert alert-success" role="alert">
-                                Registro de notas actualizado.
-                          </div>`;
-            notificaion.fadeIn("slow",()=>{
-                notificaion.html(not)
-            });
-            getEstudiantes();            
-            setTimeout(()=>{
-                notificaion.fadeOut("slow", ()=>{
-                    notificaion.html("");
-                });
-            }, 5000)
+            const msj = await objEstudiantes.updateAsignatura(idf,data); 
+            notificacion(msj, getEstudiantes, "success");
         }        
     }
 

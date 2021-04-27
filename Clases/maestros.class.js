@@ -21,37 +21,30 @@ class maestro{
         return this.maestro;
     }
 
-    deleteMaestros(idf){
-        db.collection("maestros").doc(idf).delete()
-        .then((e)=>{
-            console.log("Documento eliminado correctamente");
-        })
-        .catch((e)=>{
+    async deleteMaestros(idf){
+        try {
+            await db.collection("maestros").doc(idf).delete();
+            return "Documento eliminado correctamente";
+        } catch (e) {
             console.log(e);
-        });
+        }
     }
     
-    saveMaestro(name, title){
-        let id = this.maestro.length;
-        console.log(`lenght: ${id}`);        
-        if (id == 0) {
-           id = 1; 
-           console.log(`id: ${id}`);
-        } else {
-            id = this.maestro[id-1].id;
-            console.log(`ultimo id: ${id}`);
-            id++;
-            console.log(`id: ${id}`);
-        }
-        console.log(id); 
-        let data = {id, name, title};
-        db.collection("maestros").add(data)
-        .then((docRef) => {
-            console.log("documento guardado con ID: ", docRef.id);
-        })
-        .catch((error) => {
-            console.error("Error agregando el documento: ", error);
-        });     
+    async saveMaestro(name, title){
+        try {
+            let id = this.maestro.length;       
+            if (id == 0) {
+                id = 1; 
+            } else {
+                id = this.maestro[id-1].id;
+                id++;
+            }
+            let data = {id, name, title};
+            await db.collection("maestros").add(data);
+            return "Maestro registrado correctamente";
+        } catch (e) {
+            console.error("Error agregando el documento: ", e);
+        }    
     }
 
     async searchMaestro(id){

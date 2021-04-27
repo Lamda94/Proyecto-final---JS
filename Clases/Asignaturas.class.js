@@ -45,14 +45,13 @@ class asignaturas{
         });     
     }
 
-    deleteAsignatura(idf){
-        db.collection("asignaturas").doc(idf).delete()
-        .then((e)=>{
+    async deleteAsignatura(idf){
+        try {
+            await db.collection("asignaturas").doc(idf).delete();
             return "Documento eliminado correctamente";
-        })
-        .catch((e)=>{
+        } catch (e) {
             console.log(e);
-        });
+        }
     }
 
     searchAsignaturas(ide){

@@ -24,25 +24,24 @@ class estudiantes{
         return this.estudiantes;
     }
 
-    saveEstudiantes(name, curso){
-        const id = this.estudiantes.length;
-        let data = {id, name, curso, asignaturas:[]};
-        db.collection("estudiantes").add(data)
-        .then((docRef) => {
-            console.log("documento guardado con ID: ", docRef.id);
-        })
-        .catch((error) => {
-            console.error("Error agregando el documento: ", error);
-        });     
+    async saveEstudiantes(name, curso){
+        try {
+            const id = this.estudiantes.length;
+            let data = {id, name, curso, asignaturas:[]};
+            await db.collection("estudiantes").add(data);
+            return "Estudiante registrado correctamente";
+        } catch (e) {
+            console.error("Error agregando el documento: ", e);
+        }    
     }
 
-    deleteEstudiantes(id){
-        db.collection("estudiantes").doc(id).delete().then((e)=>{
+    async deleteEstudiantes(id){
+        try {
+            await db.collection("estudiantes").doc(id).delete();
             return "Documento eliminado correctamente";
-        })
-        .catch((e)=>{
+        } catch (e) {
             console.log(e);
-        });
+        }
     }
 
     async saveAsignatura(id, cursos){
@@ -56,10 +55,10 @@ class estudiantes{
         });
         data.asignaturas.push(asig);
         await db.collection("estudiantes").doc(id).update(data);
+        return "Asignatura añadida correctamente";
     }
 
     async updateAsignatura(ida, dat){
-        console.log("ingreso");
         
         const data = this.estudiantes.find((es)=>{
             if (es.idf == ida) {
@@ -68,12 +67,10 @@ class estudiantes{
                 console.log(`${es.idf} == ${ida}`);
             }
         });
-        delete data.idf;
-        console.log(data);  
-        data.asignaturas.push(dat);
-        console.log("pushio");      
-        console.log(data);          
+        delete data.idf; 
+        data.asignaturas.push(dat);       
         await db.collection("estudiantes").doc(ida).update(data);
+        return "Notas modificadas correctamente";
     }
 
     async removeAsignaturas(idf, name){
@@ -87,6 +84,7 @@ class estudiantes{
 
         data.asignaturas = data.asignaturas.filter(a=> a.name !== name);
         await db.collection("estudiantes").doc(idf).update(data);
+        return "Asignatura removida correctamente";
     }
 
     searchEstudiantes(ide){

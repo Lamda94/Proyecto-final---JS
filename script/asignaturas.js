@@ -5,9 +5,20 @@
 //-> deleteAsignatura: captura el id de la asignatura que se desea eliminar y lo envia mediante el objeto de la clase asignaturas para eliminar el registro. 
 
 $(document).ready(()=>{    
-    const deleteAsignatura = (idf)=>{
-        objAsignaturas.deleteAsignatura(idf); 
+    const deleteAsignatura = async (idf)=>{
+        await objAsignaturas.deleteAsignatura(idf); 
+        const not  = `<div class="alert alert-success" role="alert">
+                            Asignatura eliminado correctamente.
+                    </div>`;
+        notificaion.fadeIn("slow",()=>{
+            notificaion.html(not)
+        });
         getAsignatura();
+        setTimeout(()=>{
+        notificaion.fadeOut("slow", ()=>{
+            notificaion.html("");
+        })
+        }, 5000)         
     }
     
     const getAsignatura = async () => {   
@@ -18,8 +29,6 @@ $(document).ready(()=>{
             doc.maestro = ma.name;
             asignaturas.push(doc);
         }
-        console.log("data");
-        console.log(asignaturas); 
         const heads = ["Id", "Nombre", "Maestro"]; 
         const claves = ["id", "name", "maestro"];          
         const data = templateTable(heads, asignaturas, claves, "Asignatura", false, false, true, "");       
@@ -37,14 +46,23 @@ $(document).ready(()=>{
         });
     }
 
-    const setAsignaturas = ()=>{
-        let name = $("#inputName").val();
-        console.log(name);
-        
+    const setAsignaturas = async ()=>{
+        let name = $("#inputName").val();        
         let maestro = $("#inputMaes").val();
-        console.log(maestro);
-        objAsignaturas.saveAsignaturas(name, maestro);    
-        getAsignatura();    
+        await objAsignaturas.saveAsignaturas(name, maestro);    
+        
+        const not  = `<div class="alert alert-success" role="alert">
+                            Asignatura registrada correctamente.
+                    </div>`;
+        notificaion.fadeIn("slow",()=>{
+            notificaion.html(not)
+        });
+        getAsignatura();
+        setTimeout(()=>{
+        notificaion.fadeOut("slow", ()=>{
+            notificaion.html("");
+        })
+        }, 5000)          
     }
 
     const newAsignatura = async () =>{

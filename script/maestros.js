@@ -5,15 +5,11 @@
 //-> deleteMaestro: captura el id del maestro que se desea eliminar y lo envia al objeto de la clase maestros para eliminar el registro. 
 
 $(document).ready(()=>{
-    const setMaestro = ()=>{
+    const setMaestro = async ()=>{
         let name = $("#inputName").val();        
         let titulo = $("#inputTitulo").val();
-        objMaestros.saveMaestro(name, titulo);  
-        notificaion.fadeIn("slow",()=>{
-      
-        });
-          
-        getMaestros();    
+        const msj = await objMaestros.saveMaestro(name, titulo);  
+        notificacion(msj, getMaestros, "success");    
     }
 
     const newMaestro = () =>{
@@ -46,22 +42,17 @@ $(document).ready(()=>{
     }
 
     const deleteMaestro = async (idf,id)=>{
-        objMaestros.deleteMaestros(idf);         
+        const msj = await objMaestros.deleteMaestros(idf);         
         const asigna = await objAsignaturas.getAsignaturas();
-        console.log("regreso");
-        console.log(asigna);
                 
-        for (const doc of asigna) {
-            console.log("ingreso"); 
-            console.log(`${doc.maestro} == ${id}`);
-                      
+        for (const doc of asigna) {                      
             if (parseInt(doc.maestro) == id) {
                 const idfa = doc.idf;
-                objAsignaturas.deleteAsignatura(idfa);
+                await objAsignaturas.deleteAsignatura(idfa);
+                
             }
-        }  
-        
-        getMaestros();
+        }     
+        notificacion(msj, getMaestros, "success");
     }
 
     const getMaestros = async ()=>{        
