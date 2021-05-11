@@ -1,6 +1,6 @@
 //-------------------------------------------------------- Clase asignaturas ----------------------------------------------------------------------------------
 //--> getAsignaturas: Consulta la db de asiganturas en firebase y organiza los datos para retornarlos.
-//--> saveAsignaturas: Recibe los datos de la nueva asignatura y reliza el registro de la nueva asignatura en db de firebase
+//--> saveAsignaturas: Recibe los datos de la nueva asignatura y reliza el registro de la nueva asignatura en db de firebase.
 //--> deleteAsignatura: recibe el identificador de un registro en firebase y lo elimina del la db.
 //--> searchAsignaturas: mediante el id de la asignatura devuelve el registro de la asignatura que busca.
 

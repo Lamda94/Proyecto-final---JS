@@ -1,11 +1,11 @@
  // Variable de configuracion de firebase
  var firebaseConfig = {
-    apiKey: "AIzaSyD1n0wR2r9jxJJF4R-ipYTZSMMRaVsOz3o",
-    authDomain: "platformschool-2d9d2.firebaseapp.com",
-    projectId: "platformschool-2d9d2",
-    storageBucket: "platformschool-2d9d2.appspot.com",
-    messagingSenderId: "545437900478",
-    appId: "1:545437900478:web:eaaced02b71e304ccbc8ef"
-};
+    apiKey: "AIzaSyDU2uuZLY376VsdF3tv2SvOo_Oarqo7Av8",
+    authDomain: "psjs-a8703.firebaseapp.com",
+    projectId: "psjs-a8703",
+    storageBucket: "psjs-a8703.appspot.com",
+    messagingSenderId: "888059932087",
+    appId: "1:888059932087:web:bfe6d62d9149c793a38c32"
+  };
 //inicializacion Firebase
 firebase.initializeApp(firebaseConfig);
