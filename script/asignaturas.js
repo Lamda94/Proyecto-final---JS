@@ -75,7 +75,7 @@ $(document).ready(()=>{
                 $("#asAgregar").click(setAsignaturas);
                 $("#asCancelar").click(getAsignatura);  
             });  
-        }else{
+         }else{
             alert("es necesario el registro de al menos un maestro.");
             getMaestros();
         }    
@@ -84,4 +84,3 @@ $(document).ready(()=>{
     const btnAsignaturas = $("#asignaturas");
     btnAsignaturas.click(getAsignatura);
 });
-
